@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Objective-C 委托全方位解读 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="Delegate是运用Objective-C的运行时来实现的一种设计模式。官方文档的描述位置：iOS Library- &amp;gt; General- &amp;gt; Cocoa Fundamentals Guide- &amp;gt; Cocoa Design Patterns- &amp;gt; How Cocoa Ad">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Objective-C 委托全方位解读"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>Objective-C 委托全方位解读</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/objective-c-delegate-express/" rel="bookmark">
+        <time class="entry-date published" datetime="2011-09-30T10:27:50.000Z">
+          2011-09-30
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/Objective-C-委托全方位解读.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Delegate是运用Objective-C的运行时来实现的一种设计模式。<br><br>官方文档的描述位置：<br><br>iOS Library- &gt; General- &gt; Cocoa Fundamentals Guide- &gt; Cocoa Design Patterns- &gt; How Cocoa Adapts Design Patterns- &gt; Decorator- &gt; Delegation</p><br><p>你看文档给出的位置就可以知道它的大概作用了，它是装饰器的一种实现。如果你熟悉设计模式的话，可以知道装饰器是动态实现给一个对象添加一些额外职责的设计模式。如果不是很清楚的话，请google 装饰器 设计模式 或者 Design Patterns Decorator，了解更多。</p><br><p>那具体到Objective-C里，Delegate就是利用Objective-C 的运行时(Runtime)来实现动态的判断某对象是否存在，某对象是否实现了一些选择器(Selector)，如果实现了，则通过调用该对象的某一选择器来帮助自己实现一些功能。</p><br><p>在实际使用当中，设计一个自己的类Class的AClassDelegate可以通过两种方式实现，一种是非正式协议，Informal Protocol。</p><br><p>正式协议，Protocol。比较新的类的设计都会使用Protocol是定义自己的Delegate方法，并为之标记可选还是必需实现。<br><br>当一个类会作为另一个类的Delegate的时候，需要实现该Delegate的Protocol，这意味着如果有标记@required的相应方法，那该类的实例必需实现该方法。@optional的方法就并不一定要实现。</p><br><p>举一个具体的例子：<br><br>UINavigationController的Delegate应该是很少用到的，我看了一下也应该是比较简单的Delegate的设计。</p><br><p>[cc lang=”c”]<br><br>@protocol UINavigationControllerDelegate NSObject &gt;</p><br><p>@optional</p><br><p>// Called when the navigation controller shows a new top view controller via a push, pop or setting of the view controller stack.<br><br>- (void)navigationController:(UINavigationController <em>)navigationController willShowViewController:(UIViewController </em>)viewController animated:(BOOL)animated;<br><br>- (void)navigationController:(UINavigationController <em>)navigationController didShowViewController:(UIViewController </em>)viewController animated:(BOOL)animated;</p><br><p>@end<br><br>[/cc]</p><br><p>这个Delegate的方法都是可选实现的，不是必须的，所以通常大家比较少去主动用。<br><br>那分析一下这个Delegate，我们可以知道，这个Delegate的设计是UINavigationController在show某一个ViewController的时候会对它的Delegate进行一种类似通知的调用：“我即将展示某某ViewController了”，<br><br>那该Delegate可以通过实现这个方法进行相应的操作。</p><br><p>举一个具体实现的例子<br><br>[cc lang=”c”]<br><br>// AZDelegationDemo.h<br><br>// Created by Aladdin Zhang on 8/24/11.</p><br><p>#import<br><br>@protocol AZDelegationDemoDelegate;<br><br>@interface AZDelegationDemo : NSObject{<br><br>idAZDelegationDemoDelegate &gt; delegate;<br><br>NSMutableArray * shoppingList;<br><br>}<br><br>@property (nonatomic,assign) idAZDelegationDemoDelegate &gt; delegate;<br><br>@end</p><br><p>@interface AZDelegationDemo (informal_protocol_delegate)<br><br>- (void)buyCoffee;<br><br>@end</p><br><p>@protocol AZDelegationDemoDelegate NSObject &gt;<br><br>@required<br><br>- (void)buyPork;<br><br>@optional<br><br>- (void)buyMilk;<br><br>@end</p><br><p>// AZDelegationDemo.m<br><br>// Created by Aladdin Zhang on 8/24/11.</p><br><p>#import “AZDelegationDemo.h”</p><br><p>@implementation AZDelegationDemo<br><br>@synthesize delegate;<br><br>- (id)init{<br><br>self = [super init];<br><br>if (self) {<br><br>shoppingList = [NSMutableArray arrayWithCapacity:20];<br><br>}<br><br>return self;<br><br>}<br><br>- (void)buyStuff{<br><br>NSLog(@”My Shopping List %@”,shoppingList);<br><br>}<br><br>- (void)weeklyShopping{<br><br>if (self.delegate&amp;&amp;[self.delegate conformsToProtocol:@protocol(AZDelegationDemoDelegate)]) {<br><br>[self.delegate performSelector:@selector(buyPork)];<br><br>if ([self.delegate respondsToSelector:@selector(buyMilk)]) {<br><br>[self.delegate performSelector:@selector(buyMilk)];<br><br>}else{<br><br>[shoppingList addObject:[NSString stringWithFormat:@”Milk”]];<br><br>}<br><br>if ([self.delegate respondsToSelector:@selector(buyCoffee)]) {<br><br>[self.delegate performSelector:@selector(buyCoffee)];<br><br>}else{<br><br>[shoppingList addObject:[NSString stringWithFormat:@”Coffee”]];<br><br>}<br><br>[self buyStuff];<br><br>}<br><br>}<br><br>@end<br><br>[/cc]<br><br>这是我刚刚为这个回答写的一个例子，基本上涵盖了一般用途的Delegate的设计，这里不对具体Delegate的实现进行说明了，和其他系统提供的Delegate的使用基本一致。<br><br>在这个例子中，我分别使用了分类(Category)，即非正式协议，和协议(Protocol)来实现Delegate的设计。其实运用Objective-C的动态性，分类实现的协议和Protocol中的可选的协议方法，在调用上是一样的。使用正式协议，并标记为必需的好处是，可以通过编译器来帮助矫正不该出现的错误。</p><br><p>来自<a href="http://www.zhihu.com/question/19827157" target="_blank" rel="noopener">知乎</a></p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

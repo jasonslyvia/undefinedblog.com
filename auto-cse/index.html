@@ -1,0 +1,180 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何自动调用Google自定义搜索引擎进行搜索 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="谷歌自定义搜索引擎（CSE）为我们提供了很好的谷歌搜索支持，作为对博客搜索程序的扩充，Google搜索很好的完成了更高阶的搜索任务。然而试想这样一个场景，用户首先使用了Wordpress自带的搜索引擎进行搜索，并没有获取到想要的结果，假设你在搜索结果界面又放了一个Google自定义搜索框，用户还需要">
+  
+
+  
+  
+  <meta name="keywords" content="google">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="如何自动调用Google自定义搜索引擎进行搜索"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>如何自动调用Google自定义搜索引擎进行搜索</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/auto-cse/" rel="bookmark">
+        <time class="entry-date published" datetime="2012-11-28T16:57:55.000Z">
+          2012-11-28
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/如何自动调用Google自定义搜索引擎进行搜索.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p><a href="https://www.google.com/cse/" target="_blank">谷歌自定义搜索引擎</a>（CSE）为我们提供了很好的谷歌搜索支持，作为对博客搜索程序的扩充，Google搜索很好的完成了更高阶的搜索任务。然而试想这样一个场景，用户首先使用了Wordpress自带的搜索引擎进行搜索，并没有获取到想要的结果，假设你在搜索结果界面又放了一个Google自定义搜索框，用户还需要再次键入关键字点击搜索，才能转到Google自定义搜索结果页面。那么有没有办法让Google自定义搜索引擎自动进行搜索呢？答案是肯定的，我们需要借助一些简单的Google CSE API。</p>
+<p>关于如何申请 CSE 这里不再赘述，假设你已经申请好了 CSE。</p>
+<p><strong>HTML</strong></p>
+<p><pre class="brush: xml;fontsize: 100; first-line: 1;">&lt;div id=”cse-search-form” style=”width: 100%;display:none;”&gt;Loading&lt;/div&gt;</pre><br><strong>JS</strong></p>
+<p><pre class="lang:js decode:true brush: jscript;fontsize: 100; first-line: 1;">&lt;script src=”<a href="http://www.google.com.hk/jsapi" target="_blank" rel="noopener">http://www.google.com.hk/jsapi</a>“ type=”text/javascript”&gt;&lt;/script&gt;<br>&lt;script type=”text/javascript”&gt;<br>  google.load(‘search’, ‘1’, {language : ‘zh-CN’});<br>  google.setOnLoadCallback(function() {<br>    //获取需要搜索的关键词并执行搜索，如下两行为关键代码<br>    var query = ‘苹果教程网’;<br>    customSearchControl.execute(query);<br>    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(<br>      ‘001212031995655897722:skb-lu6f7zo’, customSearchOptions);<br>    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);<br>    var options = new google.search.DrawOptions();<br>    options.setSearchFormRoot(‘cse-search-form’);<br>    options.setAutoComplete(true);<br>    customSearchControl.setAutoCompletionId(‘001212031995655897722:skb-lu6f7zo+qptype:1’);<br>    customSearchControl.draw(‘cse’, options);<br>  }, true);<br>&lt;/script&gt;</pre><br><strong>搜索结果</strong></p>
+<p><pre class="brush: xml;fontsize: 100; first-line: 1;">&lt;link rel=”stylesheet” href=”<a href="http://www.google.com/cse/style/look/default.css" target="_blank" rel="noopener">http://www.google.com/cse/style/look/default.css</a>“ type=”text/css” /&gt;<br>&lt;div id=”cse” style=”width:100%;”&gt;&lt;/div&gt;</pre><br>简单来说，整个功能的核心语句就是</p>
+<p><pre class="lang:js decode:true brush: jscript;fontsize: 100; first-line: 1;">customSearchControl.execute(query);</pre><br>自行判断在合适的位置调用该语句即可实现自动搜索（无需用户点搜索按钮，关键词需要预先设置好，即query变量）</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/google/">google</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

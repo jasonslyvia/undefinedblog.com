@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>ReactRouter 使用指南 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="本文已过时，推荐阅读最新的 React Router v0.13.3 版使用指南
+本文已过时，推荐阅读最新的 React Router v0.13.3 版使用指南
+本文已过时，推荐阅读最新的 React Router v0.13.3 版使用指南
+
+在构建一个复杂的页面时，给不同的操作赋予不同的路由（">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="ReactRouter 使用指南"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>ReactRouter 使用指南</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/react-router/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-09-20T22:47:00.000Z">
+          2014-09-20
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/ReactRouter-使用指南.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <blockquote>
+<p>本文已过时，推荐阅读最新的 <a href="http://undefinedblog.com/react-router-0-13-3/">React Router v0.13.3 版使用指南</a></p>
+<p>本文已过时，推荐阅读最新的 <a href="http://undefinedblog.com/react-router-0-13-3/">React Router v0.13.3 版使用指南</a></p>
+<p>本文已过时，推荐阅读最新的 <a href="http://undefinedblog.com/react-router-0-13-3/">React Router v0.13.3 版使用指南</a></p>
+</blockquote>
+<p>在构建一个复杂的页面时，给不同的操作赋予不同的路由（route）是一个很好的实践。对于习惯Backbone的人来说<code>Backbone.Router</code>就是一个很方便的<code>route-action</code>映射模块，那么在React中应该怎样增加路由呢？虽然也可以使用Backbone的解决方案，但是ReactRouter或许是一个更符合React思想的路由组件。</p>
+<p>ReactRouter（<a href="https://github.com/rackt/react-router" target="_blank" rel="noopener">github地址</a>）是由Ryan Florence开发的应用于ReactJS的路由组件，它通过定义ReactJS组件<code>&lt;Routes&gt;</code>及相关子组件来实现页面路由的映射、参数的解析和传递。如果你熟悉<code>ember.js</code>，你会发现它处理路由的方式和ember的思想是一致的。</p>
+<p>##快速上手</p>
+<p>一个最基本的页面，菜单有「图书」和「电影」两个选项，点击「图书」显示图书列表（链接变为/books），点击「电影」显示电影列表（链接变为/movies）。</p>
+<p><a href="http://jsfiddle.net/jasonslyvia/t7cuwpma/1/" target="_blank" rel="noopener">DEMO</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ReactRouter = <span class="built_in">require</span>(<span class="string">'react-router'</span>);</span><br><span class="line"><span class="keyword">var</span> Routes = ReactRouter.Routes;</span><br><span class="line"><span class="keyword">var</span> Route = ReactRouter.Route;</span><br><span class="line"></span><br><span class="line"><span class="comment">//定义整个页面的路由结构</span></span><br><span class="line"><span class="keyword">var</span> routes = (</span><br><span class="line">  &lt;Routes location=<span class="string">"hash"</span>&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/"</span> handler=&#123;App&#125;&gt;</span><br><span class="line">      &lt;Route path=<span class="string">"books"</span> name=<span class="string">"bookList"</span> handler=&#123;Books&#125;/&gt;</span><br><span class="line">      &lt;Route path=<span class="string">"movies"</span> name=<span class="string">"movieList"</span> handler=&#123;Movies&#125;/&gt;</span><br><span class="line">    &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>Routes&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>这样就定义了包含两条路由规则的路由，一条指向 /books，一条指向 /movies。(严格来说应该是三条路由，还有一个指向 / 的路由)</p>
+<p><code>&lt;Routes&gt;</code>组件接受一个名为 location 的 props，这是用来定义用何种前端技术实现路由，可选参数为hash或histroy。hash表示通过改变location.hash更新页面链接，而histroy表示使用history.pushState来更新链接。如果不考虑兼容IE8，可以选择history。</p>
+<p><code>&lt;Route&gt;</code>组件是ReactRouter的核心组件，通过它来定义路由对应的路径，处理这条路由的组件（handler）等等。其中path属性是指这条路由对应的路径，比如</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=<span class="string">"books"</span> name=<span class="string">"bookList"</span> handler=<span class="string">"Books"</span>/&gt;</span><br></pre></td></tr></table></figure>
+<p>点击后浏览器中的路径就会变为 <code>http://你的网址/#/books</code>。</p>
+<p>而handler是指当这条路由被触发时该渲染哪个组件，其中<code>Books</code>就是一个React组件。之所以把 name 放在最后讲，是因为 name 是用在使用路由的时候起作用。</p>
+<p>上面我们定义了整个页面的路由规则，但总需要点击一个什么链接才能触发这个路由吧，下面我们就来加上这么一个<code>触发器</code>，同时看看 name 什么用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在上述代码的基础上</span></span><br><span class="line"><span class="keyword">var</span> Link = ReactRouter.Link;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> App = React.createClass(&#123;</span><br><span class="line">  render: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div className=<span class="string">"main"</span>&gt;</span><br><span class="line">        &lt;nav&gt;</span><br><span class="line">          &lt;Link to=<span class="string">"bookList"</span>&gt;图书&lt;<span class="regexp">/Link&gt;</span></span><br><span class="line"><span class="regexp">          &lt;Link to="moviewList"&gt;电影&lt;/</span>Link&gt;</span><br><span class="line">        &lt;<span class="regexp">/nav&gt;</span></span><br><span class="line"><span class="regexp">        &lt;div className="content"&gt;</span></span><br><span class="line"><span class="regexp">          &lt;this.props.activeRouteHandler/</span>&gt;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//routes在上述代码中已定义</span></span><br><span class="line">React.renderComponent(routes, <span class="built_in">document</span>.body);</span><br></pre></td></tr></table></figure>
+<p>在上述代码中我们新require了一个React组件<code>Link</code>，这就是我们路由的<code>触发器</code>，你可以把它理解为高级版的<code>&lt;a href=&quot;#你的hash&quot;&gt;链接文字&lt;/a&gt;</code>。注意我们定义的<code>Link</code>中有一个 to 属性，这就是对应了之前定义的路由中<code>&lt;Route&gt;</code>组件的 name 属性。比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Link to=&quot;bookList&quot;&gt;图书&lt;/Link&gt;</span><br></pre></td></tr></table></figure>
+<p>点击后就会触发</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Route path=<span class="string">"books"</span> name=<span class="string">"bookList"</span> handler=<span class="string">"Books"</span>/&gt;</span><br></pre></td></tr></table></figure>
+<p>从而导致<code>Books</code>这个React组件被渲染。ReactRouter还做了一个很贴心的功能，当点击Link触发对应的路由后，<code>Link</code>本身还会被添加 active 的className，方便你对当前激活的菜单项添加样式。（效果见DEMO，className默认是 active，可以通过传 props 改变）</p>
+<p>问题又来了，哪一行代码定义了该渲染哪个组件呢？注意我们的 <code>App</code>组件中的<code>&lt;this.props.activeRouteHandler/&gt;</code>，这就是ReactRouter为我们自动添加的当前 active 的handler，当点击 <code>bookList</code> 时，activeRouteHandler就是Books组件。</p>
+<p>另外还需要注意一点，和我们习惯中的React渲染方式不同，最终渲染到DOM上的组件并不是常规的React组件，而是我们定义的<code>routes</code>。注意<code>React.renderComponent(routes, document.body);</code><br>这一行。</p>
+<p><a href="http://jsfiddle.net/jasonslyvia/t7cuwpma/1/" target="_blank" rel="noopener">DEMO</a></p>
+<p>##进阶使用</p>
+<p>把玩一下DEMO你会发现，虽然路由起作用了（由于jsfiddle沙盒的限制，路由的改变并没有反映到浏览器的地址栏中），但是在默认状态下除了两个菜单项啥都没有渲染，这和我们的预期不符。</p>
+<p>###Redirect</p>
+<p>如果你想默认就显示所有图书，即默认渲染<code>Books</code>这个React组件，那么你需要引入一个新的ReactRouter组件<code>Redirect</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Redirect = ReactRouter.Redirect;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> routes = (</span><br><span class="line">  &lt;Routes location=<span class="string">"hash"</span>&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/"</span> handler=&#123;App&#125;&gt;</span><br><span class="line">      &lt;Route path=<span class="string">"books"</span> name=<span class="string">"bookList"</span> handler=&#123;Books&#125;/&gt;</span><br><span class="line">      &lt;Route path=<span class="string">"movies"</span> name=<span class="string">"movieList"</span> handler=&#123;Movies&#125;/&gt;</span><br><span class="line">      &lt;Redirect to=<span class="string">"bookList"</span>/&gt;</span><br><span class="line">    &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>Routes&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>和<code>Link</code>类似，<code>Redirect</code>也有 to 属性，这个属性定义了重定向的地址。我们的<code>routes</code>更新后，当访问当前页面时（即访问 / 时），会自动跳转到 /books。</p>
+<p><a href="http://jsfiddle.net/jasonslyvia/t7cuwpma/2/" target="_blank" rel="noopener">DEMO</a></p>
+<p>###DefaultRoute</p>
+<p>如果你不想默认显示图书或电影，而是另一个组件，比如欢迎信息什么的，可以使用<code>DefaultRoute</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> DefaultRoute = ReactRouter.DefaultRoute;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> routes = (</span><br><span class="line">  &lt;Routes location=<span class="string">"hash"</span>&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/"</span> handler=&#123;App&#125;&gt;</span><br><span class="line">      &lt;Route path=<span class="string">"books"</span> name=<span class="string">"bookList"</span> handler=&#123;Books&#125;/&gt;</span><br><span class="line">      &lt;Route path=<span class="string">"movies"</span> name=<span class="string">"movieList"</span> handler=&#123;Movies&#125;/&gt;</span><br><span class="line">      &lt;DefaultRoute handler=&#123;Welcome&#125;/&gt;</span><br><span class="line">    &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>Routes&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>这样在访问 / 时，默认会渲染<code>Welcome</code>组件，注意这个时候两个菜单项都没有被激活（即没有 active 的className），除非你点击「图书」或「电影」。</p>
+<p><a href="http://jsfiddle.net/jasonslyvia/t7cuwpma/3/" target="_blank" rel="noopener">DEMO</a></p>
+<p>###路由参数及嵌套路由</p>
+<p>业务逻辑更复杂了，现在除了点击「图书」显示图书列表，点击「电影」显示电影列表外，点击某一本图书（或某一部电影）还要显示对应的详情。</p>
+<p><a href="http://jsfiddle.net/jasonslyvia/t7cuwpma/4/" target="_blank" rel="noopener">DEMO</a></p>
+<p>首先更新路由对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> routes = (</span><br><span class="line">  &lt;Routes location=<span class="string">"hash"</span>&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/"</span> handler=&#123;App&#125;&gt;</span><br><span class="line">      &lt;Route path=<span class="string">"books"</span> name=<span class="string">"bookList"</span> handler=&#123;Books&#125;&gt;</span><br><span class="line">      	&lt;Route path=<span class="string">":bookId"</span> name=<span class="string">"book"</span> handler=&#123;Book&#125;/&gt;</span><br><span class="line">      &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Route path="movies" name="movieList" handler=&#123;Movies&#125;&gt;</span></span><br><span class="line"><span class="regexp">      	&lt;Route path=":movieId" name="movie" handler=&#123;Movie&#125;/</span>&gt;</span><br><span class="line">      &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">      &lt;DefaultRoute handler=&#123;Welcome&#125;/</span>&gt;</span><br><span class="line">    &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>Routes&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>和之前的路由对象类似，需要嵌套的路由直接进行嵌套即可（完全就是字面意思嘛），但是注意到我们的<code>&lt;Route&gt;</code>的path变成了一个奇怪的形式，「:bookId」和「:movieId」是什么意思？熟悉<code>express</code>的同学应该对这样的路由形式不会陌生，这定义了路由接受的一个参数，简单的说 /moview/:movieId 定义了一个规则，当访问 /moviews/123 的时候，程序会自动把 123 提取出来当做名为 movieId 的参数。</p>
+<p>详细的介绍见<a href="https://github.com/rackt/react-router/blob/master/docs/guides/path-matching.md" target="_blank" rel="noopener">路由匹配规则</a>。</p>
+<p>既然我们的路由更新了，那么对应的 handler 也应该进行更新。首先给<code>Books</code>和<code>Movies</code>这两个组件在render时添加<code>&lt;this.props.activeRouteHandler/&gt;</code>，然后再新建显示单个图书和单个电影的React组件<code>Book</code>及<code>Movie</code>。</p>
+<p>注意在渲染单个图书或电影的组件中，我们可以通过<code>this.props.params</code>来提取通过路由传进来的参数（效果见DEMO）。</p>
+<p>另外还要注意一点，正如你在DEMO中看到的，嵌套的路由对应的<code>Link</code>对象（即视觉上的菜单项）会全部被添加 active 的className，当你查看某一本书的详情时，书名及图书菜单都处于高亮状态，一条龙高亮。</p>
+<p><a href="http://jsfiddle.net/jasonslyvia/t7cuwpma/4/" target="_blank" rel="noopener">DEMO</a></p>
+<p>###小技巧</p>
+<p>这里还有另外一个问题，如果我们想点击某本书的时候不再显示图书列表而是只显示菜单和图书详情该怎么办呢？我们再对路由对象进行小小的改动。</p>
+<p><a href="http://jsfiddle.net/jasonslyvia/t7cuwpma/5/" target="_blank" rel="noopener">DEMO</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> routes = (</span><br><span class="line">  &lt;Routes location=<span class="string">"hash"</span>&gt;</span><br><span class="line">    &lt;Route path=<span class="string">"/"</span> handler=&#123;App&#125;&gt;</span><br><span class="line">      &lt;Route path=<span class="string">"books"</span> name=<span class="string">"bookList"</span> handler=&#123;BookRoute&#125;&gt;</span><br><span class="line">        &lt;Route path=<span class="string">":bookId"</span> name=<span class="string">"book"</span> handler=&#123;Book&#125;/&gt;</span><br><span class="line">        &lt;DefaultRoute handler=&#123;Books&#125;/&gt;</span><br><span class="line">      &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">      &lt;Route path="movies" name="movieList" handler=&#123;MovieRoute&#125;&gt;</span></span><br><span class="line"><span class="regexp">        &lt;Route path=":movieId" name="movie" handler=&#123;Movie&#125;/</span>&gt;</span><br><span class="line">        &lt;DefaultRoute handler=&#123;Movies&#125;/&gt;</span><br><span class="line">      &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">      &lt;DefaultRoute handler=&#123;Welcome&#125;/</span>&gt;</span><br><span class="line">    &lt;<span class="regexp">/Route&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>Routes&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>首先我们修改了原本显示图书列表及电影列表的handler，将它们改为新的React组件<code>BookRoute</code>及<code>MovieRoute</code>，这两个组件的功能就是渲染 <code>this.props.activeHandler</code>。</p>
+<p>其次我们将原本的列表当做<code>&lt;DefaultRoute&gt;</code>渲染，这样就能实现点击单条信息的时候不再显示列表了。不过这样就需要新增加两个傀儡handler，不知道大家有没有更好的办法实现。</p>
+<p><a href="http://jsfiddle.net/jasonslyvia/t7cuwpma/5/" target="_blank" rel="noopener">DEMO</a></p>
+<p>##ReactRouter小结</p>
+<p>以上基本覆盖了SPA中对于路由使用的大多数use case，除了上述功能外，ReactRouter还提供了用于获取当前active路由的mixin <code>ActiveState</code>，以及其它实用的工具函数及方法，具体请参考其 <a href="https://github.com/rackt/react-router/tree/master/docs/api" target="_blank" rel="noopener">API 文档</a>。</p>
+<p>最后还有个小内幕，React的核心作者之一也参与了ReactRouter的开发，因此看来ReactRouter还是很有潜力的！</p>
+<blockquote>
+<p>本文已过时，推荐阅读最新的 <a href="http://undefinedblog.com/react-router-0-13-3/">React Router v0.13.3 版使用指南</a></p>
+<p>本文已过时，推荐阅读最新的 <a href="http://undefinedblog.com/react-router-0-13-3/">React Router v0.13.3 版使用指南</a></p>
+<p>本文已过时，推荐阅读最新的 <a href="http://undefinedblog.com/react-router-0-13-3/">React Router v0.13.3 版使用指南</a></p>
+</blockquote>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

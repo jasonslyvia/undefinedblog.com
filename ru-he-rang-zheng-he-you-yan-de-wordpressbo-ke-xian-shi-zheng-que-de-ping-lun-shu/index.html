@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何让整合友言的Wordpress博客显示正确的评论数 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="友言（uyan.cc）是一个社会化评论聚合网站，使用友言提供的社交评论框代替Wordpress自带的评论框，可以让你的网站与SNS连接的更紧，也方便网友直接在SNS里对网站的内容进行评论。但是由于友言使用了&amp;lt;iframe&amp;gt;结构，且评论机制不同于Wordpress原生评论，因此Wordpr">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="如何让整合友言的Wordpress博客显示正确的评论数"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>如何让整合友言的Wordpress博客显示正确的评论数</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/ru-he-rang-zheng-he-you-yan-de-wordpressbo-ke-xian-shi-zheng-que-de-ping-lun-shu/" rel="bookmark">
+        <time class="entry-date published" datetime="2011-11-25T20:03:08.000Z">
+          2011-11-25
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/如何让整合友言的Wordpress博客显示正确的评论数.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>友言（uyan.cc）是一个社会化评论聚合网站，使用友言提供的社交评论框代替Wordpress自带的评论框，可以让你的网站与SNS连接的更紧，也方便网友直接在SNS里对网站的内容进行评论。<br><br>但是由于友言使用了&lt;iframe&gt;结构，且评论机制不同于Wordpress原生评论，因此Wordpress主题自带的显示评论计数的函数就没用了。下面ppiOS就教大家如何解决这一问题。</p><br><h2>步骤一</h2><br><p>将以下代码保存到footer.php中&lt;/body&gt;标签之前<br><br>[cc lang=”javascript”]<br><br><!-- UY BEGIN --><br><br><script charset="gb2312" type="text/javascript" language="javascript">// &lt;![CDATA[<br>(function () {<br>        var uyan_amount = document.createElement(‘script’);<br>        uyan_amount.type = ‘text/javascript’;<br>        uyan_amount.src = ‘<a href="http://uyan.cc/js/countFrame.js">http://uyan.cc/js/countFrame.js</a>‘;<br>        (document.getElementsByTagName(‘HEAD’)[0] || document.getElementsByTagName(‘BODY’)[0]).appendChild(uyan_amount);<br>    }());<br>// ]]&gt;</script><br><br><!-- UY END -->[/cc]</p><br><h2>步骤二</h2><br><p>在需要显示评论计数的地方插入如下代码<br><br>[cc lang=”php”]<a href="<?php echo wp_get_shortlink(); ?>" uyan_identify="true">0条评论</a>[/cc]<br><br>友言会自动判断本篇文章的评论数并修复为正确的数量，完成！</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

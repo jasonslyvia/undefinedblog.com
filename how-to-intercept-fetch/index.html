@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何拦截 fetch 请求 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="在前端工程实践中，经常会有拦截 Ajax 请求的需求，比如统一添加 CSRF token，或者统一实现缓存处理等。在前 fetch 时代，如果使用了 jQuery，可以直接通过配置 jQuery.ajaxPrefilter 实现；如果用的是原生 API，也可以通过 hack XMLHttpReque">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="如何拦截 fetch 请求"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>如何拦截 fetch 请求</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/how-to-intercept-fetch/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-04-23T12:47:58.000Z">
+          2017-04-23
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/如何拦截-fetch-请求.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在前端工程实践中，经常会有拦截 Ajax 请求的需求，比如统一添加 CSRF token，或者统一实现缓存处理等。在前 fetch 时代，如果使用了 jQuery，可以直接通过配置 <code>jQuery.ajaxPrefilter</code> 实现；如果用的是原生 API，也可以通过 hack XMLHttpRequest 完成同样的功能。</p>
+<p>然而在 fetch API 出现后，事情就没那么简单了。在我上一篇文章<a href="https://undefinedblog.com/window-fetch-is-not-as-good-as-you-imagined/">《fetch 没有你想象的那么美》</a>中，我提到了对 fetch 进行 Monkey Patch 时遇到的奇怪报错：</p>
+<blockquote>
+<p>Uncaught TypeError: Already read</p>
+</blockquote>
+<p>同时解释了这是 fetch 使用 Stream API 导致的限制，那这是不是意味着我们无法 hack 原生的 fetch 从而实现对 fetch 结果的统一拦截过滤了呢？答案是否定的。</p>
+<p>在仔细阅读完 fetch 相关的文档后，我在 <code>Response</code> 对象的<a href="https://developer.mozilla.org/en-US/docs/Web/API/Response" target="_blank" rel="noopener">文档页面</a>找到了一个有意思的属性和一个更有意思的方法。</p>
+<h3 id="Reponse-bodyUsed"><a href="#Reponse-bodyUsed" class="headerlink" title="Reponse.bodyUsed"></a>Reponse.bodyUsed</h3><p>这个属性用于标示这个 Response 对象是否已经被读取过，比如下面的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'/api/user.json'</span>)</span><br><span class="line">.then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(response.bodyUsed); <span class="comment">// false</span></span><br><span class="line">  <span class="keyword">return</span> response.json().then(<span class="function"><span class="params">json</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(response.bodyUsed); <span class="comment">// true</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果这里再次尝试对 response 的 Stream 数据进行读取，则会报错</span></span><br><span class="line">    <span class="comment">// response.text();   // Uncaught TypeError: Already read</span></span><br><span class="line">    <span class="keyword">return</span> json;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="params">json</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 拿到服务端响应的 JSON 对象</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>就很好的解释了 bodyUsed 属性的作用和使用方法。但是从实用角度来说，这个布尔值并没有太大的作用，真正帮我们解决拦截并统一响应 fetch 请求的功能在下面。</p>
+<h3 id="Reponse-prototype-clone"><a href="#Reponse-prototype-clone" class="headerlink" title="Reponse.prototype.clone()"></a>Reponse.prototype.clone()</h3><p>这个 API 顾名思义就是对 response 对象的一个复制，根据 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response/clone" target="_blank" rel="noopener">文档</a> 描述，复制出来的 response 对象和原来的对象数据和行为完全一致，只是保存在不同的变量中而已。</p>
+<p>那么 clone 方法如何解决 Already Read 报错的问题呢，让我们稍微修改一下上面的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'/api/user.json'</span>)</span><br><span class="line">.then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(response.bodyUsed); <span class="comment">// false</span></span><br><span class="line">  <span class="keyword">return</span> response.clone().json().then(<span class="function"><span class="params">json</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(response.bodyUsed); <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果这里再次尝试对 response 的 Stream 数据进行读取，没有问题</span></span><br><span class="line">    <span class="comment">// response.text().then(text =&gt; console.log(text));</span></span><br><span class="line">    <span class="keyword">return</span> json;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>注意第 4 行我们在 <code>response.json()</code> 调用前添加了 <code>response.clone().json()</code>，这样就完成了对 response 对象的复制。后续的 Stream API 读取发生在一个全新的 response 对象上，所以原来的 response 对象 bodyUsed 属性为 false，也可以对其调用不同的读取方法，如 .text() 或 .blob()。</p>
+<p>唯一需要注意的是，clone 方法的调用一定要发生在对 response 调用任何读取之前，比如下面的代码依然会报错：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'/api/user.json'</span>)</span><br><span class="line">.then(<span class="function"><span class="params">response</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(response.bodyUsed); <span class="comment">// false</span></span><br><span class="line">  <span class="keyword">return</span> response.json().then(<span class="function"><span class="params">json</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 如果这里先尝试 clone，再对 response 的 Stream 数据进行读取，依然会报错</span></span><br><span class="line">    <span class="comment">// response.clone().text().then(text =&gt; console.log(text));</span></span><br><span class="line">    <span class="keyword">return</span> json;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

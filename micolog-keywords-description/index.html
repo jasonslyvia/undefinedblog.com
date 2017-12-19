@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Micolog自动摘要及keywords、description输出代码 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="Micolog 的主题默认是不输出任何 keywords 和 description 的 meta 信息的，了解 SEO 的人都知道搜索引擎很看重这些。所以为了让 Micolog 更加 SEO 友好，我们应该手动添加这些内容。一般来说，对于文章页，我们的输出思路是：keywords：所有标签desc">
+  
+
+  
+  
+  <meta name="keywords" content="micolog,python">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Micolog自动摘要及keywords、description输出代码"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>Micolog自动摘要及keywords、description输出代码</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/micolog-keywords-description/" rel="bookmark">
+        <time class="entry-date published" datetime="2012-11-22T15:37:47.000Z">
+          2012-11-22
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/Micolog自动摘要及keywords、description输出代码.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Micolog 的主题默认是不输出任何 keywords 和 description 的 meta 信息的，了解 SEO 的人都知道搜索引擎很看重这些。所以为了让 Micolog 更加 SEO 友好，我们应该手动添加这些内容。</p><br><p>一般来说，对于文章页，我们的输出思路是：</p><br><ul><br><li>keywords：所有标签</li><br><li>description：文章的前若干字，一般为100</li><br></ul><br><p>下面就贴上本人收集整理的一些代码，用于自动生成文章摘要及输出 keywords 和 description 信息：</p><br><p><strong>model.py</strong></p><br><p>在这个文件中找到 <strong>get_content_excerpt(self, more=’..more’): &nbsp;</strong>这个函数，并将其完整替换为如下内容</p><br><pre class="brush: python;fontsize: 100; first-line: 1; ">    def get_content_excerpt(self,more=’..more’):<br>        if g_blog.show_excerpt:<br>            if self.excerpt:<br>                return self.excerpt+’ &lt;a href=”/%s”&gt;%s&lt;/a&gt;’%(self.link,more)<br>            else:<br>                sc=self.content.split(‘&lt;!–more–&gt;’)<br>                if len(sc)&gt;1:<br>                    return sc[0]+u’ &lt;a href=”/%s”&gt;%s&lt;/a&gt;’%(self.link,more)<br>                else:<br>                    temp = self.truncate_html((sc[0]),’120 html’)<br>                    return self.filter_tags(temp)<br>        else:<br>            return self.content<br><br>    def truncate_html(self,content, args):<br>       maxlen=120       #显示字数<br>       format = ‘text’ #html：保留html格式截取 text:纯文本取<br>       showimg = ‘’    #空　表示不显示图片 img 显示图片<br>       end=’…’         #省略显示符号<br>       if args:<br>           bits = args.split(‘ ‘)<br>           if len(bits) == 3:<br>               maxlen, format, showimg = bits<br>           elif len(bits) == 2:<br>               maxlen, format = bits<br>           else:<br>               maxlen = args<br>       maxlen = int(maxlen)<br>       #过虑段落标记<br>       content = re.sub(‘&lt;/?(P|p)[^&lt;&gt;]<em>/?&gt;’, ‘’, content)<br>       #截取纯文本<br>       if format == ‘text’:<br>           content = re.sub(‘(&lt;)[^&lt;&gt;]</em>(&gt;?)’, ‘’, content)<br>           content = re.sub(‘&amp;nbsp;’, ‘’, content)#过虑掉&amp;nbsp;<br><br>           if len(content) &lt;= maxlen:<br>               return content<br><br>           return ‘%s%s’ % (content[:maxlen],end)<br>       #过虑图片标记<br>       if showimg != ‘img’:<br>           content = re.sub(‘&lt;/?(IMG|img)[^&lt;&gt;]<em>/?&gt;’, ‘’, content)<br>       n =0<br>       result = ‘’<br>       temp = ‘’<br>       isCode = False #是不是HTML代码<br>       isHtml = False #是不是HTML特殊字符,如&amp;nbsp;<br>       #获取指定长度的内容<br>       for i in range(len(content)):<br>           temp = content[i]<br>           if temp == ‘&lt;’:<br>               isCode = True<br>           elif temp == ‘&amp;’:<br>               isHtml = True<br>           elif temp == ‘&gt;’ and isCode:<br>               n = n -1<br>               isCode = False<br>           elif temp == ‘;’ and isHtml:<br>               isHtml = False<br><br>           if not isCode and not isHtml:<br>               n = n + 1<br><br>           result += temp<br><br>           if n &gt;= maxlen:<br>               break<br><br>       #取出所有html标记<br>       temp_result = re.sub(‘(&gt;)[^&lt;&gt;]</em>(&lt;?)’,’&gt;&lt;’, result)<br>       temp_result = temp_result.lower()<br><br>       if len(content) - len(temp_result) &lt; maxlen:<br>           return content<br><br>       result += str(end)<br><br>       #去掉不需要结束标记html标记<br>       rg = “&lt;/?(AREA|BASE|BASEFONT|BODY|BR|COL|COLGROUP|DD|DT|FRAME|HEAD|HR|HTML|IMG|INPUT|ISINDEX|LI|LINK|META|OPTION|P|PARAM|TBODY|TD|TFOOT|TH|THEAD|TR|area|base|basefont|body|br|col|colgroup|dd|dt|frame|head|hr|html|img|input|isindex|li|link|meta|option|p|param|tbody|td|tfoot|th|thead|tr)[^&lt;&gt;]<em>/?&gt;”<br><br>       temp_result = re.sub(rg, ‘’,temp_result)<br><br>       #去掉成对的html标记<br>       temp_result = re.sub(‘&lt;([a-zA-Z]+)[^&lt;&gt;]</em>&gt;(.<em>?)&lt;/\1&gt;’, ‘’,temp_result)<br><br>       #取出html标记符号<br>       arr = re.findall(‘&lt;([a-zA-Z]+)[^&lt;&gt;]</em>&gt;’, temp_result)<br><br>       #补全html标记<br>       for i in range(len(arr)):<br>           result += ‘&lt;/%s&gt;’ % arr[len(arr)-i-1]<br>       return result<br><br>    def filter_tags(self, htmlstr):<br>        re_cdata=re.compile(‘//&lt;![CDATA[[^&gt;]<em>//]]&gt;’,re.I) #匹配CDATA<br>        re_script=re.compile(‘&lt;s</em>script[^&gt;]<em>&gt;[^&lt;]</em>&lt;s<em>/s</em>scripts<em>&gt;’,re.I)#Script<br>        re_style=re.compile(‘&lt;s</em>style[^&gt;]<em>&gt;[^&lt;]</em>&lt;s<em>/s</em>styles<em>&gt;’,re.I)#style<br>        re_br=re.compile(‘&lt;brs</em>?/?&gt;’)#处理换行<br>        re_h=re.compile(‘&lt;/?w+[^&gt;]<em>&gt;’)#HTML标签<br>        re_comment=re.compile(‘&lt;!–[^&gt;]</em>–&gt;’)#HTML注释<br>        s=re_cdata.sub(‘’,htmlstr)#去掉CDATA<br>        s=re_script.sub(‘’,s) #去掉SCRIPT<br>        s=re_style.sub(‘’,s)#去掉style<br>        s=re_br.sub(‘n’,s)#将br转换为换行<br>        s=re_h.sub(‘’,s) #去掉HTML 标签<br>        s=re_comment.sub(‘’,s)#去掉HTML注释<br>        #去掉多余的空行<br>        blank_line=re.compile(‘n+’)<br>        s=blank_line.sub(‘n’,s)<br>        s=self.replaceCharEntity(s)#替换实体<br>        return s<br><br>    def repalce(s,re_exp,repl_string):<br>        return re_exp.sub(repl_string,s)<br><br>    ##替换常用HTML字符实体.<br>    #使用正常的字符替换HTML中特殊的字符实体.<br>    #你可以添加新的实体字符到CHAR_ENTITIES中,处理更多HTML字符实体.<br>    #@param htmlstr HTML字符串.<br>    def replaceCharEntity(self, htmlstr):<br>        CHAR_ENTITIES={‘nbsp’:’ ‘,’160’:’ ‘,<br>                    ‘lt’:’&lt;’,’60’:’&lt;’,<br>                    ‘gt’:’&gt;’,’62’:’&gt;’,<br>                    ‘amp’:’&amp;’,’38’:’&amp;’,<br>                    ‘quot’:’”‘,’34’:’”‘,}<br><br>        re_charEntity=re.compile(r’&amp;#?(?P&lt;name&gt;w+);’)<br>        sz=re_charEntity.search(htmlstr)<br>        while sz:<br>            entity=sz.group()#entity全称，如&gt;<br>            key=sz.group(‘name’)#去除&amp;;后entity,如&gt;为gt<br>            try:<br>                htmlstr=re_charEntity.sub(CHAR_ENTITIES[key],htmlstr,1)<br>                sz=re_charEntity.search(htmlstr)<br>            except KeyError:<br>                #以空串代替<br>                htmlstr=re_charEntity.sub(‘’,htmlstr,1)<br>                sz=re_charEntity.search(htmlstr)<br>        return htmlstr</pre><br><p>在主题模板的 <strong>base.html</strong> 中，添加如下代码：</p><br><pre class="brush: xml;fontsize: 100; first-line: 1; "><br>&lt;meta name=”keywords” content=”ios开发,wordpress,php,objective-c,苹果教程网” /&gt;<br>&lt;meta name=”description” content=”iOS开发博客，主要记录iOS开发、PHP开发相关技术内容” /&gt;<br></pre><br><p>确保其它的模板中没有另外的 keywords 和 description 输出语句即可</p><br><p>&nbsp;</p><br><p>&nbsp;</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/micolog/">micolog</a><a href="/tags/python/">python</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

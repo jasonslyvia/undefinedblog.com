@@ -1,0 +1,225 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Angular2 中那些我看不懂的地方 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="博客停更了近 3 个月，实在是愧对很多在微博上推荐的同学。因为最近大部分时间都投入在公司里一个比较复杂的项目中，直到本周才算正式发布，稍得解脱。
+说这个项目复杂，不仅是因为需求设计复杂，更是因为在这个项目里我们使用了很多新技术 —— Angular2（是的，beta 版），Webpack2（是的，b">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Angular2 中那些我看不懂的地方"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>Angular2 中那些我看不懂的地方</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/angular-the-confusing-part/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-04-17T02:17:56.000Z">
+          2016-04-17
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/Angular2-中那些我看不懂的地方.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>博客停更了近 3 个月，实在是愧对很多在微博上推荐的同学。因为最近大部分时间都投入在公司里一个比较复杂的项目中，直到本周才算正式发布，稍得解脱。</p>
+<p>说这个项目复杂，不仅是因为需求设计复杂，更是因为在这个项目里我们使用了很多新技术 —— Angular2（是的，beta 版），Webpack2（是的，beta 版），RxJS（这两个 <a href="https://github.com/Reactive-Extensions/RxJS" target="_blank" rel="noopener">RxJS1</a>、<a href="https://github.com/ReactiveX/rxjs" target="_blank" rel="noopener">RxJS2</a> 傻傻分不清楚）还有 TypeScript。</p>
+<p>关于为什么一个大型线上项目会选择这么冒进的技术选型这里不多做评价，只能说最终团队还是成功将整个产品发布到了线上，我也对 Angular2 这个全新的 Angular 有了更全面的认识。</p>
+<p>这篇文章不想对比 React 和 Angular2（不要急，这些东西肯定会出现在项目总结里），而是想站在熟悉 React + Redux 开发模式的前端工程师角度说一说 Angular2，尤其是那些我不太理解的地方。</p>
+<p>剧透：这篇文章无意引起骂战，因此如果你看到我哪里写的不对，请直接在评论区里纠正。</p>
+<h2 id="看不懂的依赖注入"><a href="#看不懂的依赖注入" class="headerlink" title="看不懂的依赖注入"></a>看不懂的依赖注入</h2><p>我知道这其实不仅仅针对 Angular2，早在 Angular1 中就存在依赖注入的概念，甚至这还是 Angular 引以为傲的特性。每当谈到依赖注入的时候，我就看到一帮 OOP（以 Java 为首）爱好者眼里闪烁着奇异的光芒。</p>
+<p>然而依赖注入的问题一直困扰着我，倒不是说不理解依赖注入的使用方法或是原理，而是不理解<strong>为什么我的代码里需要依赖注入？</strong></p>
+<p>当我把这个问题抛给项目组中强推 Angular 的同学时，他也一时语塞。</p>
+<p>在 Angular2 中，一个常见的依赖注入是注入一个 Http 对象，用于发送请求。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;Component, OnInit&#125; <span class="keyword">from</span> <span class="string">'angular2/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;Http&#125; <span class="keyword">from</span> <span class="string">'angular2/http'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="string">'test'</span>,</span><br><span class="line">  providers: [Http]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span> <span class="title">implements</span> <span class="title">OnInit</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(private http: Http) &#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    <span class="keyword">this</span>.http.get(<span class="string">'/api/user.json'</span>).map(<span class="function"><span class="params">res</span> =&gt;</span> res.json()).subscribe(<span class="function"><span class="params">result</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 这里拿到请求的结果</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码是在 Angular 中使用内置 Http 模块发送请求的一段示例代码。具体依赖注入发生在 constructor 函数中。按照 Angular 宣传的那样，你只用简单的在 constructor 中声明这些参数，Angular 将自动为你处理依赖注入的问题。</p>
+<p>注意到我们要使用 Http 来发请求，首先需要从 <code>angular2/http</code> 中将 Http import 进来，然后需要在组件的配置中添加对应的 providers，最后还需要在 constructor 中声明一个参数。</p>
+<p>这个时候我其实是有点懵逼的，因为在一般应用里，发请求大概是这样的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> request = <span class="built_in">require</span>(<span class="string">'superagent'</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getUser</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> request.get(<span class="string">'/api/user.json'</span>).end(<span class="function">(<span class="params">err, res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 这里是拿到请求的结果</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为了公平起见，我还是假装依赖了一个第三方的库来实现 Ajax 请求。在这份代码里没有什么高大上的依赖注入，更没有什么 constructor，只有简单的引入并使用。</p>
+<p>所以我不太明白，Angular 中的依赖注入究竟在多大程度上发挥着作用？</p>
+<h3 id="语法糖、语法糖和语法糖"><a href="#语法糖、语法糖和语法糖" class="headerlink" title="语法糖、语法糖和语法糖"></a>语法糖、语法糖和语法糖</h3><p>很多人在第一眼看到 React 的时候，都在叫嚣 JSX 是「在 JS 里嵌入 HTML」，是邪门歪道，吃枣药丸。我只想说，相比于 Angular2 里的这些语法糖，JSX 简直就是 JavaScript 里的纯情小处男。</p>
+<p>以下引用部分 Angular2 文档中关于模板语法的部分：</p>
+<blockquote>
+<p>Expanding *ngFor</p>
+<p>The <em>ngFor undergoes a similar transformation. We begin with an </em>ngFor example:</p>
+<p><code>&amp;lt;hero-detail *ngFor=&quot;#hero of heroes; trackBy:trackByHeroes&quot; [hero]=&quot;hero&quot;&gt;&lt;/hero-detail&gt;</code></p>
+<p>Here’s the same example after transporting the ngFor to the template directive:</p>
+<p><code>&amp;lt;hero-detail template=&quot;ngFor #hero of heroes; trackBy:trackByHeroes&quot; [hero]=&quot;hero&quot;&gt;&lt;/hero-detail&gt;</code></p>
+<p>And here it is expanded further into a &lt;template&gt; tag wrapping the original &lt;hero-detail&gt; element:</p>
+<p><code>&amp;lt;template ngFor #hero [ngForOf]=&quot;heroes&quot; [ngForTrackBy]=&quot;trackByHeroes&quot;&gt;
+  &lt;hero-detail [hero]=&quot;hero&quot;&gt;&lt;/hero-detail&gt;
+&amp;lt;/template&gt;</code></p>
+</blockquote>
+<p>读完之后你会发现，<code>*ngFor</code> 这个指令，原来是个语法糖。好嘛，其实语法糖在很多框架设计里都有啊。但是当你展开这个语法糖之后，你会发现这个语法糖其实还是另一个语法的语法糖。这也就是说，<code>*ngFor</code> 是语法糖的语法糖。</p>
+<p>这种例子在 Angular2 中还有不少，任何一个正常的 JavaScript 开发者如果不想把自己逼疯的话，都会喜欢一个原始的 for 循环，或者一个 <code>[].map</code> 吧……</p>
+<p>看到某篇文章争论说 Angular2 的模板用的是 「Valid HTML」，我只想说管你 Valid 不 Valid，臣妾看不懂啊。</p>
+<h3 id="模板里面到底发生了什么"><a href="#模板里面到底发生了什么" class="headerlink" title="模板里面到底发生了什么"></a>模板里面到底发生了什么</h3><p>其实刚开始写 Angular 应用的时候，心里还是对双向绑定挺期待的。因为在 React + Redux 架构里面，表单处理永远都是一个痛点（这里安利一下自己写的 <a href="https://github.com/jasonslyvia/redux-form-utils" target="_blank" rel="noopener">redux-form-utils</a> 良心工具，线上产品背书）。但是等我真的在写 Component 中的 template 时，就开始慢慢崩溃了。</p>
+<p>首先最崩溃的是，我没办法在模板中断点调试（还是我没有找到正确的方法），这导致在一些模板中存在复杂逻辑的场景我只能默默的在心里推倒运行的过程。</p>
+<p>然后是在模板里面，你还是可以写大量的逻辑，比如这样</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  template: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;ul #listEl [class.rendered]="listEl.rendered"&gt;</span></span><br><span class="line"><span class="string">      &lt;li *ngFor="#item of list; if(last) &#123;listEl.rendered = true;&#125;" (click)="list.push(Math.random()); $event.stopPropagation(); $event.preventDefault(); // Do other fancy stuff"&gt;</span></span><br><span class="line"><span class="string">        &#123;&#123; item.text &#125;&#125;</span></span><br><span class="line"><span class="string">      &lt;/li&gt;</span></span><br><span class="line"><span class="string">    &lt;/ul&gt;</span></span><br><span class="line"><span class="string">  `</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这些在模板中的代码都是完全合法的 Angular2 语法。有人可能觉得，允许你这么写不代表你一定要这么写。事实上，我已开始很多组件都是这么写的，因为很快，因为网上很多 demo 也这么写，因为不知道该怎么更好的组织代码。</p>
+<p>这样下去，一个 Angular 组件中，你不仅要阅读组件本身的各种对数据的处理，还要看模板中的各种逻辑。尤其是一些比较复杂的组件，模板和组件本身放在不同的文件中时，这种来回上下文的切换真是酸爽。</p>
+<h3 id="组件通信操碎了心"><a href="#组件通信操碎了心" class="headerlink" title="组件通信操碎了心"></a>组件通信操碎了心</h3><p>在 Angular 中，父组件想要传递一些信息给子组件，还是比较简单的，直接使用属性绑定即可。在子组件中稍微麻烦一点，多声明一个 @Input。</p>
+<blockquote>
+<p>这里还想吐槽两句，一个组件想要引用另一个组件，要先 import 进来，然后还要加到当前组件 Component 配置的 directives 属性中。开发过程中好多次莫名其妙的报错都是因为忘了这一步……</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Parent.js</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="string">'parent'</span>,</span><br><span class="line">  template: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;h1&gt;Parent&lt;/h1&gt;</span></span><br><span class="line"><span class="string">    &lt;child [data]="data"&gt;&lt;/child&gt;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Parent</span> </span>&#123;</span><br><span class="line">  data = <span class="string">'react'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Child.js</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="string">'child'</span>,</span><br><span class="line">  template: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;h4&gt;Child&lt;/h4&gt;</span></span><br><span class="line"><span class="string">    &lt;p&gt;Data from parent: &#123;&#123; data &#125;&#125;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> </span>&#123;</span><br><span class="line">  @Input() data;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个时候问题来了，当子组件发生某些变化父组件想要知道的时候，你有这么几种选择。</p>
+<ol>
+<li>在子组件中定一个 @Output 属性，然后父组件用 (event)=”handler()” 的语法来监听这个事件</li>
+<li>将父组件的一个 event handler 当做属性传给子组件，子组件通过调用这个方法来通知父组件（在 Redux 里，这很常见）</li>
+<li>设计一个 Service 然后分别注入到父组件和子组件之中进行通信</li>
+</ol>
+<p>在我开发这个项目的时候，Angular2 的官方文档中还没有任何教程说明组件之间沟通该如何进行（现在<a href="https://angular.io/docs/ts/latest/cookbook/component-communication.html#!#parent-to-child" target="_blank" rel="noopener">有了</a>），所以我果断选择了最 Redux 的那种。</p>
+<p>结果发现，后来更新的官方文档里明确说明了不提倡使用这样的方式。</p>
+<p>我只能说很心累……</p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>奇葩的路由设定，用 <code>/...</code> 定义一个非最终页面路由，以及没有一个全局的路由结构，让 Angular2 里面的路由变得非常难推导。如果你不一层一层跟踪下去，根本就无法了解整个 Angular2 应用的路由结构。</p>
+<p>莫名其妙的报错，而且很多错误都 Google 不到答案，只能 Google 到一群绝望的开发者提出绝望的问题。看看 Github 上 Angular Repo 里那些绝望的 issue，你就知道后悔当初自己为什么要选 Angular2 作为线上项目的架构了。我自己 Watch 了很多遇到的问题，然而收到最多的更新都是「+1」。</p>
+<p>复杂的生命周期，官方文档看了一遍又一遍，网上的例子搜了很多，又不能确定是不是最新的 API。至今没有全部弄明白 Angular2 所有的生命周期都是干嘛用的，只用过几个简单的 OnInt、AfterViewInit 和 OnChanges。</p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>写着写着快要变成吐槽 Angular2 了，其实 Angular2 有很多设计的非常不错的地方值得其它框架学习。比如内置的 ViewEncapsulation 解决了 CSS 冲突的问题，完善的 NgForm 系列表单指令能够高效的解决表单校验和提交（前提是那些语法你都学会），底层设计与 DOM 无关以便运行在 WebWorker、服务器等不同环境等等。</p>
+<p>不管怎么样，从项目开始的 Angular2 Alpha，用到现在的 Angular2 Beta 15，学习到了很多新知识，但学到更多的还是自己原来还有这么多不知道。</p>
+<p>后面还是会投入更多的精力在 Redux 生态建设上，毕竟团队内 React + Redux 已经全面开花结果，有必要寻找到 Redux 最优的开发实践。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>为什么 React 这么快？ | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="第一次使用 React 的同学都会对 React.js 的文件大小感到隐隐的不安。的确，未压缩的代码有 450KB+，GZIP 后还有近 100KB，这么庞大的库会不会在性能上存在瓶颈呢？
+其实在实际开发过程中，并没有感觉到我们基于 React 构建的 WebApp 有任何的性能瓶颈。按照 Reac">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="为什么 React 这么快？"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>为什么 React 这么快？</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/why-react-is-so-fast/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-12-31T09:25:54.000Z">
+          2014-12-31
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/为什么-React-这么快？.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>第一次使用 React 的同学都会对 React.js 的文件大小感到隐隐的不安。的确，未压缩的代码有 450KB+，GZIP 后还有近 100KB，这么庞大的库会不会在性能上存在瓶颈呢？</p>
+<p>其实在实际开发过程中，并没有感觉到我们基于 React 构建的 WebApp 有任何的性能瓶颈。按照 React 官方的说法，即使在 iOS 的 UIWebView 中（无法使用 JavaScript JIT 引擎），React 也能保证 60FPS 的更新率。</p>
+<p>那么 React 是如何做到如此高效的呢，其核心开发者之一 Pete Hunt 在 <a href="http://www.quora.com/Pete-Hunt/Posts/React-Convincing-the-Boss" target="_blank" rel="noopener">Quora</a> 上针对这一问题做了阐述。</p>
+<p>下面就我个人的理解结合 Pete Hunt 的回答，整理归纳了 5 点 React 如此高效的原因：</p>
+<p><strong>1. React 的核心代码在开发过程中就考虑了编译器优化问题</strong></p>
+<p>具体的优化措施包括使用对象池来避免频繁的垃圾回收（垃圾回收过程可能导致浏览器出现卡顿现象）、兼容 Google 的 <a href="https://developers.google.com/closure/compiler/" target="_blank" rel="noopener">Closure Compiler</a>以及保证代码被 JIT 正确的优化。</p>
+<p><strong>2. 每一个 React 组件都有完整的生命周期</strong></p>
+<p>组件的生命周期如 <code>getInitialState</code>、<code>componentWillMount</code> 等，这些生命周期方法保证所有对 DOM 的修改都是批量更新的（batch update）。这样你就可以避免读一次 DOM、写一次 DOM 再读一次 DOM 这样频繁触发 layout 的糟糕代码了。</p>
+<p><strong>3. 强大的 Virtual DOM</strong></p>
+<p>实际上，JavaScript 之所以让人感觉慢就是因为 DOM 操作慢。试想随便新建一个 DOM 元素就有无数个属性、方法、事件、回调，这样的性能损耗是不能接受的。当 state 发生改变时，React 提供的 <code>render</code> 方法并不会直接把你定义的 HTML 结构重新写进 DOM 中，而是在内部的 Virtual DOM 中进行 diff，再计算出需要更新的 DOM，最后再把这部分需要更新的 DOM 写入真正的 DOM 中。</p>
+<p><strong>4. 高效的单向数据绑定</strong></p>
+<p>写过 Angular 的同学都知道 Angular 提供的双向数据绑定用着很爽，但是当需要绑定的数据越来越多时，Angular 的脏值检测方法就显得力不从心了。而 React 提供的仅是单向数据绑定，这样的绑定并不会让你觉得不便，反而配合 React 自己的事件系统，用起来得心应手。</p>
+<p><strong>5. 用于极致优化 shouldComponentUpdate()</strong></p>
+<p>即使 React 提供了这么多性能优化的方法，你还是可以进一步优化你的组件的性能，这就是 <code>shouldComponentUpdate()</code> 方法。在这个方法中你可以根据新的 props 和当前 props 的差异对比确认当前这个组件是否需要更新。</p>
+<p>有了以上 5 点优化，开发者无需担心如何优化 React 的性能，而可以更多的把精力集中在业务代码的实现上，从而真正实现高效的前端开发。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

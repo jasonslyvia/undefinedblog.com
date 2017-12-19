@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Cydia源搭建、维护、更新 deb文件编辑方法 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="这个个人技术博客已经很久没有更新了，基本失去了它本来的意义，逐步恢复吧！记录一下今晚到现在学到的知识：Cydia搭建的方法 和 利用.htaccess文件将二级域名解析到子目录DEB文件编辑方法注：适用于Mac系统1、将下载到本地的 .deb 文件解压缩（使用 BetterZip软件），得到&amp;nbs">
+  
+
+  
+  
+  <meta name="keywords" content="cydia,linux">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Cydia源搭建、维护、更新 deb文件编辑方法"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>Cydia源搭建、维护、更新 deb文件编辑方法</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/cydiayuan-da-jian-wei-hu-geng-xin/" rel="bookmark">
+        <time class="entry-date published" datetime="2012-04-21T20:58:26.000Z">
+          2012-04-21
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/Cydia源搭建、维护、更新-deb文件编辑方法.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>这个个人技术博客已经很久没有更新了，基本失去了它本来的意义，逐步恢复吧！</p><br><p>记录一下今晚到现在学到的知识：<span style="color: #800000;">Cydia搭建的方法</span> 和 <span style="color: #800000;">利用.htaccess文件将二级域名解析到子目录</span></p><br><h2>DEB文件编辑方法</h2><br><p>注：适用于Mac系统</p><br><p>1、将下载到本地的 .deb 文件解压缩（使用 BetterZip软件），得到&nbsp;control.tar.gz 和&nbsp;data.tar.gz 两个文件</p><br><p>2、同时选中这两个文件双击解压，得到 control 文件和一个 data.tar</p><br><p>3、新建一个 DEBIAN 文件夹，将 control 文件放入</p><br><p>4、编辑 control 文件中的信息</p><br><p>5、打开控制台，使用 cd 命令切换到当前目录</p><br><p>6、使用</p><br><blockquote><br><p>find . -name ‘*.DS_Store’ -type f -delete</p><br></blockquote><br><p>命令删除 .DS_Store 文件</p><br><p>7、拷贝文件夹的名称，打开控制台，切换到当前目录</p><br><p>8、输入命令</p><br><blockquote><br><p>chmod 0755 当前目录名</p><br><p>chmod 0755 当前目录名/DEBIAN</p><br><p>chmod 0755 当前目录名/DEBIAN/control</p><br><p>dpkg-deb -b 当前目录名</p><br></blockquote><br><h2>Cydia搭建及维护的方法</h2><br><p>具体的搭建方法不多说了，基本是参考这个视频：<a href="http://www.youtube.com/watch?v=9eHKvCqBDBQ" target="_blank" rel="noopener">http://www.youtube.com/watch?v=9eHKvCqBDBQ</a></p><br><p>主要记录一下<strong>如何添加和更新.deb文件</strong></p><br><p>1、将所有的.deb文件放到 /repo/debs 文件夹中</p><br><p>2、在【终端】里输入命令</p><br><blockquote><br><p>cd repo</p><br></blockquote><br><p>3、继续输入命令</p><br><blockquote><br><p>dpkg-scanpackages debs / &gt; Packages</p><br></blockquote><br><p>4、第3步生成了集合所有deb文件信息的 <strong>Packages</strong> 文件</p><br><p>5、利用 bzip2 生成 Cydia 可以识别的文件格式，输入命令</p><br><blockquote><br><p>bzip2 -fks Packages</p><br></blockquote><br><p>6、将所有文件上传到服务器即可</p><br><p>注：Release 文件为整个Cydia源的描述</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/cydia/">cydia</a><a href="/tags/linux/">linux</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

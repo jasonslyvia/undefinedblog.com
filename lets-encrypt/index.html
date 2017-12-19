@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Lets Encrypt 花三分钟免费接入ssl证书 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="2016-05-01 19:58:46 更新：最近很多朋友说我的 https 证书过期了，于是重新按照 DO 的这篇教程重新配置了一遍。不得不说，DO 写教程的水平确实一流！建议移步学习。
+
+很久很久以前我还在当个人站长的时候，就一直琢磨着给网站买个 ssl 证书，这样用户访问的时候浏览器上的小绿锁">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Lets Encrypt 花三分钟免费接入ssl证书"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>Lets Encrypt 花三分钟免费接入ssl证书</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/lets-encrypt/" rel="bookmark">
+        <time class="entry-date published" datetime="2016-01-02T21:58:24.000Z">
+          2016-01-02
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/Lets-Encrypt-花三分钟免费接入ssl证书.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>2016-05-01 19:58:46 更新：最近很多朋友说我的 https 证书过期了，于是重新按照 DO 的<a href="https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04" target="_blank" rel="noopener">这篇教程</a>重新配置了一遍。不得不说，DO 写教程的水平确实一流！建议移步学习。</p>
+<hr>
+<p>很久很久以前我还在当个人站长的时候，就一直琢磨着给网站买个 ssl 证书，这样用户访问的时候浏览器上的小绿锁能给人一种非常安全的印象。然而导致我最终没有上 https 的原因有：</p>
+<ol>
+<li>证书好贵 </li>
+<li>https 会影响 SEO（据说） </li>
+<li>懒（<del>这才是真正的原因</del>）</li>
+</ol>
+<p>直到前段时间发现了 <a href="https://letsencrypt.org/" target="_blank" rel="noopener">Lets Encrypt 项目</a>，一个倡导互联网上所有网站都该使用 https 的组织，提供免费的 ssl 证书服务。</p>
+<p><img src="http://ww3.sinaimg.cn/bmiddle/831e9385gw1ezlvzdzwsoj20a70fb75d.jpg" alt="ssl certificate price in godaddy"></p>
+<p>上图是 GoDaddy 的 ssl 证书报价，换句话说，Lets Encrypt 免费送你价值 62.99 刀的证书。</p>
+<p>当然，这里提到价格并不是为了让大家薅羊毛，而是为了体现 Lets Encrypt 组织的高尚目标。希望看到本文的同学，能够享受免费 ssl 证书带来了安全和稳定，而不是产生牟利等不当想法。</p>
+<p>使用的方法也很简单，以 nginx 为例，直接使用 Github 上 xdtianyu 同学提供的<a href="https://github.com/xdtianyu/scripts/tree/master/lets-encrypt" target="_blank" rel="noopener">脚本</a>即可。</p>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>切换到你希望保存证书及私钥的目录，我选择当前用户的 home，即 <code>~</code>。</p>
+<blockquote>
+<p>下文中所有 <code>/path/to/</code> 请替换成你服务器上的实际路径；<code>your_domain</code> 同理替换成你自己的域名</p>
+</blockquote>
+<p>下载脚本及配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~</span><br><span class="line">wget https://raw.githubusercontent.com/xdtianyu/scripts/master/lets-encrypt/letsencrypt.conf</span><br><span class="line">wget https://raw.githubusercontent.com/xdtianyu/scripts/master/lets-encrypt/letsencrypt.sh</span><br><span class="line">chmod +x letsencrypt.sh</span><br></pre></td></tr></table></figure>
+<p>编辑配置文件，将第2、3、4行中的 Example.com 替换成你自己的域名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim letsencrypt.conf</span><br></pre></td></tr></table></figure>
+<p>执行 letsencrypt 脚本，获取证书及私钥</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./letsencrypt.sh ./letsencrypt.conf</span><br></pre></td></tr></table></figure>
+<p>添加 nginx alias</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  ...</span><br><span class="line"></span><br><span class="line">  location /.well-known/ &#123;</span><br><span class="line">    <span class="built_in">alias</span> /path/to/.well-known/;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>修改 nginx 配置，加载私钥和证书<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">   listen 443 ssl;</span><br><span class="line">   ssl_certificate /path/to/your_domain.chained.crt;</span><br><span class="line">   ssl_certificate_key /path/to/your_domain.com.key;</span><br><span class="line"></span><br><span class="line">   ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>全部操作完成后，重启 nginx 即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service nginx restart</span><br><span class="line"><span class="comment">#或 </span></span><br><span class="line">/etc/init.d/nginx -s reload</span><br></pre></td></tr></table></figure>
+<h2 id="额外配置"><a href="#额外配置" class="headerlink" title="额外配置"></a>额外配置</h2><p>首先，Lets Encrypt 的证书需要每月更新，因此你需要一个 cron 命令定时运行上述脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0 0 1 * * ~/letsencrypt.sh ~/letsencrypt.conf &gt;&gt; /var/<span class="built_in">log</span>/lets-encrypt.log 2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+<p>其次，如果你希望重定向所有的非 https 到 https 访问，可以在 nginx 配置中添加如下 server block</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name your_domain.com;</span><br><span class="line">    <span class="built_in">return</span> https://your_domain.com<span class="variable">$request_uri</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总的来说，Lets Encrypt 所倡导免费及普遍的 ssl 证书有利于整个互联网环境的安全化。对于某些靠流量劫持广告的 ISP 来说，苦日子要来了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>
