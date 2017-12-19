@@ -1,0 +1,177 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Mocha 测试设置 timeout 不生效的问题排查 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="Mocha 提供了针对不同粒度的测试超时配置项，但是最近在某个使用了 Karma + Mocha 的项目中遇到无论怎么设置 this.timeout() Mocha 都顽固的在 2000ms 时报超时错误的问题，经排查疑似为当 Mocha 和 Karma 一起使用时，需要通过 karma.conf.">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Mocha 测试设置 timeout 不生效的问题排查"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>Mocha 测试设置 timeout 不生效的问题排查</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/set-timeout-for-mocha-with-karma/" rel="bookmark">
+        <time class="entry-date published" datetime="2017-01-16T11:47:25.000Z">
+          2017-01-16
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/Mocha-测试设置-timeout-不生效的问题排查.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>Mocha 提供了针对不同粒度的测试超时配置项，但是最近在某个使用了 Karma + Mocha 的项目中遇到无论怎么设置 <code>this.timeout()</code> Mocha 都顽固的在 2000ms 时报超时错误的问题，经排查疑似为当 Mocha 和 Karma 一起使用时，需要通过 <code>karma.conf.js</code> 来配置 Mocha 超时时间。</p>
+<p>当没有正确设置 Karma + Mocha 超时时间时，会报出如下错误：</p>
+<blockquote>
+<p>Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure “done()” is called; if returning a Promise, ensure it resolves.</p>
+</blockquote>
+<p>此时即使在测试代码里显式添加了超时配置也没有用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="string">'Suite'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  it(<span class="string">'Case'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.timeout(<span class="number">60000</span>); <span class="comment">// 无用</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>这里还需要注意，一些新手经常犯的错误为这里使用了 ES2015 的箭头函数，this 这个 context 发生了改变，导致超时配置不生效。</p>
+<p>最后经过一番 Google，发现当 Mocha 和 Karma 一起使用时，要在 <code>karma.conf.js</code> 里对 Mocha 进行配置，配置如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// karma.conf.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span>(<span class="params">config</span>) </span>&#123;</span><br><span class="line">  config.set(&#123;</span><br><span class="line">    client: &#123;</span><br><span class="line">      mocha: &#123;</span><br><span class="line">        timeout : <span class="number">6000</span> </span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>其它需要传递给 Mocha 的参数也可以在这里配置。此处配置的超时时间为全局级别，因此设置时要考虑最长的 Case 需要的时间。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

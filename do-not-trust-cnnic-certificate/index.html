@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>不要信任CNNIC证书 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="CNNIC 是干什么的
+CNNIC 不是企业、不是事业、不是社团。截至2001年7月，它业已卖掉12万个cn域名，CNNIC仅此一项，年毛收入就可以达到近4000万元，而且这个数字还在飞速增长之中。另外，CNNIC还在做中文域名注册、流量认证、通用网址注册、认证培训等十分赚钱的业务。上级主管单位：工">
+  
+
+  
+  
+  <meta name="keywords" content="https,security,ssl">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="不要信任CNNIC证书"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>不要信任CNNIC证书</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/do-not-trust-cnnic-certificate/" rel="bookmark">
+        <time class="entry-date published" datetime="2013-01-28T06:00:18.000Z">
+          2013-01-28
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/不要信任CNNIC证书.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p></p><h2>CNNIC 是干什么的</h2><p></p>
+<p>CNNIC 不是企业、不是事业、不是社团。截至2001年7月，它业已卖掉12万个cn域名，CNNIC仅此一项，年毛收入就可以达到近4000万元，而且这个数字还在飞速增长之中。另外，CNNIC还在做中文域名注册、流量认证、通用网址注册、认证培训等十分赚钱的业务。</p><br><p>上级主管单位：工信部（没错，就是搞绿坝的那货）[1]</p><br><h2>CNNIC证书是干什么的</h2><br><p>浏览网站时，你可能注意到部分网址是 https 开头的，这表明你与该网站服务器之间的链接是加密的，其他人无法获取的具体内容信息。为了建立安全链接，网站的服务器一般都会使用 SSL 证书，这些证书由第三方机构颁布，保证了权威性和安全性。[2]</p><br><p>CNNIC证书也可以看做是这样一个证书，当你和一个网站建立安全连接时，如果使用的证书是 CNNIC 证书，系统（浏览器）也会默认这个连接是安全的。</p><br><h2>为什么不能信任CNNIC证书</h2><br><p>首先，CNNIC本身就不是好鸟：[3]</p><br><ul><br><li>长期发布流氓软件</li><br><li>域名管理混乱</li><br><li>强行霸占域名</li><br><li>禁止个人注册域名</li><br><li>政策朝令夕改</li><br></ul><br><p>其次，如果你信任了 CNNIC 证书，可能导致：[4]</p><br><ul><br><li>中间人攻击（非常重要，CNNIC证书配合GFW，走遍天下无敌手）</li><br><li>ActiveX攻击</li><br></ul><br><p>最后，CNNIC 证书已经被 Windows、Mozilla 等大厂商广泛接受被作为系统内置默认可信任的证书。因此，我们需要手动清理 CNNIC 证书。[5]<br> <img class="origin_image" style="border-style: none; margin: 6px 0px; display: block; overflow: hidden; max-width: 100%; height: auto; cursor: -webkit-zoom-in;" title="点击查看原图" src="http://p3.zhimg.com/22/42/22425cd89e089ea16ecedd42e04ecbcf_m.jpg" alt=""></p><br><h2>参考资料</h2><br><p>[1][3]&nbsp;<a href="http://program-think.blogspot.com/2010/02/about-cnnic.html" target="_blank" rel="noopener">http://program-think.blogspot.com/2010/02/about-cnnic.html</a><br> [2]&nbsp;<a href="http://www.ioshin.com/digitalsignature/SSL%20and%20HTTPS.html" target="_blank" rel="noopener">HTTPS,HTTP和SSL有什么联系-iOShin SSL证书专题</a><br> [4]&nbsp;<a href="http://blog.csdn.net/program_think/article/details/5309699" target="_blank" rel="noopener">CNNIC证书的危害及各种清除方法</a><br> 如何清除 CNNIC 证书见参考资料 4</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/https/">https</a><a href="/tags/security/">security</a><a href="/tags/ssl/">ssl</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

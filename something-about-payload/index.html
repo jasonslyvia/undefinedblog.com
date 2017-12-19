@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>代码参数里的 payload 究竟是什么意思 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="好久没写东西了，趁着今天把 Ghost 升级到 0.5，顺便解决一个一直以来困扰我的问题：代码里的 payload 究竟是什么东西。
+随便在 Github 搜 payload，就能获得成千上万的代码（https://github.com/search?p=1&amp;amp;q=payload&amp;amp;ty">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="代码参数里的 payload 究竟是什么意思"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>代码参数里的 payload 究竟是什么意思</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/something-about-payload/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-08-31T15:59:33.000Z">
+          2014-08-31
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/代码参数里的-payload-究竟是什么意思.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>好久没写东西了，趁着今天把 Ghost 升级到 0.5，顺便解决一个一直以来困扰我的问题：代码里的 <code>payload</code> 究竟是什么东西。</p>
+<p>随便在 Github 搜 payload，就能获得成千上万的代码（<a href="https://github.com/search?p=1&amp;q=payload&amp;type=Code&amp;utf8=✓" target="_blank" rel="noopener">https://github.com/search?p=1&amp;q=payload&amp;type=Code&amp;utf8=✓</a>），其中以C和C++语言居多。</p>
+<p>根据词典里的解释，payload指的是</p>
+<p>1.有效载重</p>
+<ol>
+<li>负载</li>
+<li>人事费</li>
+<li>弹头内的炸药</li>
+<li>火箭所载弹头</li>
+</ol>
+<p>Wat?? 完全不能代入到代码里去理解啊，这些参数难道是计算弹头内的炸药含量的么？在一番Google之后，终于在 stackexchange 找到了一份还算靠谱的<a href="http://programmers.stackexchange.com/questions/158603/what-does-the-term-payload-mean-in-programming" target="_blank" rel="noopener">答案</a>。</p>
+<p>首先解释一下什么是 payload，payload 在这里却是可以理解为<code>有效载重</code>，但是这只是字面意思。对于程序员来说，有效载重究竟是个什么玩意儿，又是一个新的问题（调用栈又多了一层……）。</p>
+<p>要解释什么是有效载重，就得说到货运行业。比如有一位客户需要支付一笔费用委托货车司机运送一车石油，石油本身的重量、车子的重量、司机的重量等等，这些都属于<code>载重(load)</code>。但是对于该客户来说，他关心的只有石油的重量，所以石油的重量是<code>有效载重(pay-load，也就是付费的重量)</code>。</p>
+<p><strong>所以抽象一下，payload 可以理解为一系列信息中最为关键的信息。</strong></p>
+<p>回到代码中，举一个最简单的例子，一个 ajax 请求返回一个 JSON 格式的对象</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    status: 200,</span><br><span class="line">    hasError: false,</span><br><span class="line">    data: &#123;</span><br><span class="line">        userId: 1,</span><br><span class="line">        name: 'undefined'</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>data</code> 就是 payload，也就是关键信息。而 <code>status</code>、<code>hasError</code>等信息是<code>load</code>，虽然也是信息，但相对没有那么重要。</p>
+<p>说到这里感觉<code>load</code>和<code>payload</code>的关系有点像<code>信息</code>与<code>元信息</code>的关系，感兴趣的同学可以看看知乎上一篇讲<code>meta</code>的<a href="http://www.zhihu.com/question/22463701/answer/22004638" target="_blank" rel="noopener">文章</a>，很有启发性。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>一个基于 ReactJS 的拖动排序组件 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="最近由于工作上的需要接触了Facebook的前端框架React.js，简单的了解并上手使用后感觉对于非SPA但前端逻辑依然复杂的应用来说，React绝对是不二的选择。
+下面就一个稍微复杂的一点的实际应用例子来演示ReactJS的使用方法。
+react-anything-sortable项目完整源代码">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="一个基于 ReactJS 的拖动排序组件"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>一个基于 ReactJS 的拖动排序组件</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/build-react-anything-sortable/" rel="bookmark">
+        <time class="entry-date published" datetime="2014-09-15T11:37:34.000Z">
+          2014-09-15
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/一个基于-ReactJS-的拖动排序组件.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>最近由于工作上的需要接触了Facebook的前端框架<a href="http://facebook.github.io/react/" target="_blank" rel="noopener">React.js</a>，简单的了解并上手使用后感觉对于非SPA但前端逻辑依然复杂的应用来说，React绝对是不二的选择。</p>
+<p>下面就一个稍微复杂的一点的实际应用例子来演示ReactJS的使用方法。</p>
+<p><a href="https://github.com/jasonslyvia/react-anything-sortable" target="_blank" rel="noopener">react-anything-sortable项目完整源代码</a></p>
+<p>##需求</p>
+<ol>
+<li>实现一个可以拖动排序的React组件，被拖动排序的元素作为 <code>this.props.children</code>传入，其内部属性及操作不影响拖动排序的进行</li>
+<li>兼容IE 8，即无法使用 HTML5 <code>draggable</code> 属性</li>
+<li>拖动结束后返回排序正确的数据</li>
+</ol>
+<p>效果图</p>
+<p><img src="https://raw.githubusercontent.com/jasonslyvia/react-anything-sortable/master/demo.gif" alt=""></p>
+<p>##思路分析</p>
+<p>首先，由于要兼容 IE 8，方便的 HTML5 <code>draggable</code>第一个就被 ban 掉了，那么实现的方法只能是<code>mousedown</code>、<code>mousemove</code>和<code>mouseup</code>事件模拟。</p>
+<p>其次，由于不能在拖动排序组件内部渲染被拖动的元素，而是这些元素作为 children 传入，因此要在 children 的 render 过程中加以干涉，否则无法改变 children 的样式。</p>
+<p>又因为<code>this.props.children</code>是可读的，父元素无法改变其顺序，因此在拖动排序组件中我们需要手动维护一个子元素的顺序数组。同时考虑到子元素的尺寸不一，我们需要记录每一个子元素的相对坐标（相对于最直接的定位父元素）和尺寸（长宽），用于在拖动时计算目标位置。</p>
+<p>##初始化操作</p>
+<p>分析完成后，我确定需要至少两个 React Component 才能完成这个需求，一个是拖动组件 <code>Sortable</code>，一个是用于 mixin 到被拖动的元素中的 <code>SortableItemMixin</code>。</p>
+<p><code>Sortable</code> 中主要用于维护每一个 children 的各种信息，同时监听 <code>mousemove</code>及<code>mouseup</code>事件来处理拖动的过程和松开鼠标完成拖动的过程。为什么不监听<code>mousedown</code>？这个事件交给被拖动的子元素来完成，<code>Sortable</code>中仅负责处理<code>mousedown</code>的响应。</p>
+<p><code>SortableItemMixin</code>中主要定义了一些生命周期函数，在 mount 完成后将自己的坐标及尺寸“反馈”给父元素，同时在 render 时根据父元素指定的一些 props 渲染自身。</p>
+<p>##核心技术</p>
+<p>在拖动的过程中，其实 DOM 中是多了一个“被拖动”的元素，这个元素并不在 <code>this.props.children</code>中，而是我们利用 <code>React.addons.cloneWithProps</code>虚构出来的一个子元素。在拖动开始时，我们根据当前被拖动的元素的索引值利用 <code>cloneWithProps</code>新建一个“虚拟元素”并交由 render 进行渲染。</p>
+<p>同时，被点击的原始元素加上了<code>ui-sortable-placeholder</code>的class成为一个placeholder。在鼠标移动的过程中不断更新这个虚拟元素的 top、left值，同时实时计算当前鼠标的位置是否已经达到与相邻元素交换位置的程度，如果是则交换placeholder与目标元素的位置。</p>
+<p>当鼠标松开时，不再渲染这个虚拟元素，同时取消placeholder的class，使其成为一个正常的元素。这样，就完成了一次排序。</p>
+<p>至于最后返回排序后的数据，首先要求被拖动排序的元素都要指定一个 <code>sortData</code> 的 props，当 <code>mouseup</code> 触发时，<code>Sortable</code> 会根据自己维护的一个新的、排序后的顺序数组依次取出子元素中的 <code>sortData</code>，并通过回调返还给使用者。</p>
+<p>##待优化</p>
+<ol>
+<li>使用了 jQuery 进行 document 上的事件绑定，主要是因为如果将 <code>mousemove</code>事件绑定在被拖动的元素本身，一旦鼠标移动过快就会丢失焦点，鼠标会移出被拖动的元素，最终导致<code>mousemove</code>事件不再响应。使用 jQuery 绑定事件不符合 React 的设计哲学，然而这里没有更好的办法解决。</li>
+<li>对于被拖动的子元素自身需要被销毁，需要依赖使用<code>Sortable</code>的父组件重新用新的 props 渲染 <code>Sortable</code> 解决。</li>
+</ol>
+<p>如果你对这个项目感兴趣，可以阅读<br><a href="https://github.com/jasonslyvia/react-anything-sortable" target="_blank" rel="noopener">react-anything-sortable项目完整源代码</a>，或者直接通过 npm 使用它。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install react-anything-sortable --save-dev</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

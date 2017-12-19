@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>OS X Apache 部署完全指南 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="每次配置 Apache 都是痛苦的经历，几乎很少有一次成功的时候，且不说 Apache 配置文件中的各种 Listen、DocumentRoot、Directory、Order、Allow、Options、deny、grant 指令，就是基础的 *nix 权限问题就能搞到我头大。
+下面将我在 OS ">
+  
+
+  
+  
+  <meta name="keywords" content="apache2,os x">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="OS X Apache 部署完全指南"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>OS X Apache 部署完全指南</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/configure-os-x-apache/" rel="bookmark">
+        <time class="entry-date published" datetime="2013-09-25T13:04:23.000Z">
+          2013-09-25
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/OS-X-Apache-部署完全指南.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>每次配置 Apache 都是痛苦的经历，几乎很少有一次成功的时候，且不说 Apache 配置文件中的各种 Listen、DocumentRoot、Directory、Order、Allow、Options、deny、grant 指令，就是基础的 *nix 权限问题就能搞到我头大。</p>
+<p>下面将我在 OS X 下利用系统自带 Apache 2 部署 web 开发环境的过程全部记录下来，方便自己回头查看，也希望能帮助到有需要的朋友。</p>
+<p></p><h2>基本信息</h2><p></p>
+<p><ul><br>    <li>Apache 所在目录：/etc/apache2</li><br>    <li>Apache 配置文件：/etc/apache2/httpd.conf</li><br>    <li>Apache 虚拟主机配置文件：/etc/apache2/extra/http-vhost.conf</li><br>    <li>Apache 操作指令： sudo apachectl [start|stop|restart]   // 启动|停止|重启</li><br>    <li>hosts 文件：/etc/hosts</li><br></ul><br>下面的内容将不再一一指出每一个目录或文件对应的地址是什么。</p>
+<p></p><h2>部署思路</h2><br>为不同的 WEB 项目指定不同的虚拟主机，同时绑定不同的『域名』<p></p>
+<p></p><h2>部署方法</h2><br>1、编辑 apache 配置文件，找到<p></p>
+<p><pre class="lang:sh decode:true">#Virtual hosts</pre></p>
+<p>#Include /private/etc/apache2/extra/httpd-vhosts.conf<br>一段，将 Include 前面的 # 去掉，保存</p>
+<p>2、编辑虚拟主机配置文件，在末尾添加新的虚拟主机配置</p>
+<p><pre class="lang:sh decode:true">&lt;VirtualHost *:80&gt;<br>    ServerAdmin youremail@email.com<br>    ServerName your_server_name<br>    DocumentRoot “path_to_your_document_root”<br>    ErrorLog “/etc/apache2/error.log”<br>    &lt;Directory “path_to_your_document_root”&gt;<br>        Options All Indexes FollowSymLinks<br>        Satisfy Any<br>        AllowOverride All<br>        Order allow,deny<br>        Allow from all<br>        Require all granted<br>    &lt;/Directory&gt;<br>&lt;/VirtualHost&gt;</pre></p>
+<p><ul><br>    <li>ServerAdmin：你的邮箱地址，可以随便填，不影响</li><br>    <li>ServerName：要与你在 hosts 中添加的名称一致，比如你希望在浏览器输入 mywebsite.xxx 就能访问这个虚拟主机，就需要先在 hosts 中增加一行 127.0.0.1   mywebsite.xxx，再将 ServerName 设置为 mywebsite.xxx</li><br>    <li>DocumentRoot 及 Directory 后引号中的内容：你的所有代码存放的目录</li><br></ul><br>编辑完成后保存（Require all granted 是 Apache 2.4.3 以后新增的特性）</p>
+<p>3、重启 apache，试试输入你绑定好的域名访问你的虚拟主机</p>
+<p></p><h2>常见问题</h2><br>0、检查你的配置文件，通过<p></p>
+<p><pre class="lang:sh decode:true">sudo apachectl -S</pre><br>命令能够检查你当前虚拟主机的配置文件是否有语法错误活或其它错误，如果有则解决。</p>
+<p>常见的配置出错问题包括在 OS X 系统下使用了含有空格的目录，Apache 会自动为带有 \ 的目录增加多一个 \，即成为 \，导致目录无法被识别。正确的配置方法是若目录含有空格，则直接输入空格，无需转义即可。</p>
+<p>1、出现 403 Forbidden</p>
+<p>首先查看错误日志</p>
+<p><pre class="lang:sh decode:true">tail -f /etc/apache2/error.log</pre><br>看看具体是哪个目录不能访问，如果连代码所在的根目录都不能访问的话，说明权限设置有问题</p>
+<p><pre class="lang:sh decode:true">chown username:group -R *</pre><br>上面的 username 是你的用户名，如果不确定的话可以在终端输入命令『whoami』查询；group 是用户所在的组，一般来说 OS X 默认都是『staff』，如果不确定可以通过命令『groups 你的用户名』查询。通过 chown 这个命令已经递归的将你代码所在文件夹内的所有文件的所有权设置为当前用户。</p>
+<p>如果依然出错，则需要给上级目录设置执行权限</p>
+<p><pre class="lang:sh decode:true">chmod +x ..</pre><br>本操作需要递归进行到 / ，即系统根目录。</p>
+<p></p><h2>小知识</h2><p></p>
+<p></p><h3>如何让局域网内的其它电脑或终端访问本机的服务器？</h3><br>首先编辑 apache 配置文件，找到 <span class="lang:sh decode:true  crayon-inline">Listen 80</span> 将其改为<span class="lang:sh decode:true  crayon-inline">Listen <em>:80</em></span>，其次在你的虚拟主机配置文件中，找到<span class="lang:sh decode:true  crayon-inline">NameVirtualHost 80</span>，改为<span class="lang:sh decode:true  crayon-inline">NameVirtualHost :80</span>，同时将<span class="lang:sh decode:true  crayon-inline">&lt;VirtualHost 80&gt;</span> 改为 <span class="lang:sh decode:true  crayon-inline">&lt;VirtualHost *:80&gt;</span> 即可。<p></p>
+<p>这样配置的好处是比如你在本地开了一台虚拟主机跑 Windows 系统，你希望测试网站在 Windows 环境下的兼容性，则直接在虚拟机中输入本机 IP 地址就能访问了。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/apache2/">apache2</a><a href="/tags/os-x/">os x</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

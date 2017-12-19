@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何给IE6IE7360用户启用指定的Wordpress主题 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="首先呼吁大家马上抛弃IE6和IE7，最好连IE一并都抛弃了！！！！下面解决实际问题，怎么让Wordpress给这些不兼容现有主题的浏览器指定一个可以兼容的主题呢？答案是使用 IE Theme 插件，当然，这款插件只可以指定 IE 浏览器，实际上在中国有很多国产浏览器也是用 IE 内核，同样显示有问题">
+  
+
+  
+  
+  <meta name="keywords" content="wordpress">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="如何给IE6IE7360用户启用指定的Wordpress主题"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>如何给IE6IE7360用户启用指定的Wordpress主题</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/ru-he-gei-ie6ie7360yong-hu-qi-yong-zhi-ding-de-wordpresszhu-ti/" rel="bookmark">
+        <time class="entry-date published" datetime="2012-07-13T16:22:55.000Z">
+          2012-07-14
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/如何给IE6IE7360用户启用指定的Wordpress主题.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>首先呼吁大家马上抛弃IE6和IE7，最好连IE一并都抛弃了！！！！</p><br><p>下面解决实际问题，怎么让Wordpress给这些不兼容现有主题的浏览器指定一个可以兼容的主题呢？答案是使用 IE Theme 插件，当然，这款插件只可以指定 IE 浏览器，实际上在中国有很多国产浏览器也是用 IE 内核，同样显示有问题，比如 360，所以需要修改一下这款插件的部分内容，让360等浏览器也可以正常显示兼容主题。</p><br><p>编辑 IE Theme 插件中的 ie-theme.php 文件，将其中的 ie_init() 函数修改如下：</p><br><pre class="brush: php;fontsize: 100; first-line: 1; ">function ie_init(){<br>global $ie, $iever;<br>$ie = get_option(“ie”);<br>$ie[‘purl’]=WP_PLUGIN_URL.’/‘.str_replace(basename(<strong>FILE</strong>),””,plugin_basename(<strong>FILE</strong>));<br>$ie[‘path’]=WP_PLUGIN_DIR.’/‘.str_replace(basename(<strong>FILE</strong>),””,plugin_basename(<strong>FILE</strong>));<br><br>if( preg_match(“/msie.{0,1}([0-9]{1,2}).([0-9]{1,3})/i”,$_SERVER[“HTTP_USER_AGENT”],$ver) ){<br>$iever = $ver[1];<br><br>//添加如下if语句，其中360ee即360浏览器特有的User-agent<br>if( preg_match(“/360ee/i”,$_SERVER[“HTTP_USER_AGENT”]) == 1 )<br>$iever = 6;<br>}<br>else $iever=0;<br>}</pre><br><p>&nbsp;</p><br><p>如果你想增加其他的国产浏览器，比如滕旭TT之类的，只用把特定的UA加入if判断即可。最后再鄙视一下IE浏览器！！</p><br><p>测试方法：使用IE9或Chrome或Firefox访问ppiOS显示正常主题，使用IE6IE7360 IE兼容模式显示IE兼容主题，主题的Banner就是很明显的警告字样：你的浏览器版本太低了！！</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/wordpress/">wordpress</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

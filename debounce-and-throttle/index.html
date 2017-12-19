@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>图解 debounce 与 throttle 的区别 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="在实现一些需要被频繁调用的函数时，我们通常都会使用 debounce 或 throttle 方法。在我的印象中，它们的作用就是减少函数被调用的次数，但具体有什么区别，却真的不能说清楚。
+直到最近看了一篇精彩的博文，用可视化的方法展示了两者的区别，很有启发性，值得参考。
+
+注意到上图，第一行 Mous">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="图解 debounce 与 throttle 的区别"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>图解 debounce 与 throttle 的区别</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/debounce-and-throttle/" rel="bookmark">
+        <time class="entry-date published" datetime="2015-01-25T13:41:43.000Z">
+          2015-01-25
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/图解-debounce-与-throttle-的区别.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>在实现一些需要被频繁调用的函数时，我们通常都会使用 <code>debounce</code> 或 <code>throttle</code> 方法。在我的印象中，它们的作用就是减少函数被调用的次数，但具体有什么区别，却真的不能说清楚。</p>
+<p>直到最近看了一篇精彩的<a href="http://drupalmotion.com/article/debounce-and-throttle-visual-explanation" target="_blank" rel="noopener">博文</a>，用可视化的方法展示了两者的区别，很有启发性，值得参考。</p>
+<p><img src="/content/images/2015/Jan/QQ20150125-1-2x.png" alt="debounce 与 throttle"></p>
+<p>注意到上图，第一行 <code>Mousemove Events</code> 展示了 <code>mousemove</code> 事件触发的频率。第二行和第三行是分别使用 underscore 与 jQuery 的 debounce 方法(leading 参数为true，保证一开始先调用一次目标函数)后事件的触发频率。第四、五行则是 trailing 参数为 true（保证 delay 结束调用一次）的触发频率。与之对比的是最后三行，使用的是 throttle 方法。</p>
+<p>首先我们的直观感觉是使用 debounce 方法相比于 throttle 方法事件触发的频率更低，但实际上不能这么理解。要解释上图的结果，首先需要了解 debounce 和 throttle 的原理。</p>
+<p>当我们阅读 lodash 的代码时会发现，throttle 方法不过是 debounce 方法的一个修饰。也就是说，<em>.throttle 和 </em>.debounce 最终都会都会调用 debounce 方法。那么 debounce 究竟是如何工作的呢？</p>
+<p>首先看 _.debounce 的 API：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_.debounce(func, delay, options);</span><br></pre></td></tr></table></figure>
+<p>func 是需要被调用的目标函数，delay 是时间限制，options 是一系列的配置，为了简化问题，这里不多提。</p>
+<p>当调用 _.debounce 后，会返回一个函数，这个函数在被调用时会生成一个 setTimeout(delayed, delay)。其中 delayed 又是一个内部方法，在 delayed 被调用时进行如下检测：当前时间 - 上次func被调用事件 是否 小于 0 或 大于 delay ？如果是则执行一次 func，记录并返回执行结果，同时更新上次被调用时间；如果不是则调用 setTimeout 进行下一次的判断。</p>
+<p>因此，当你像下面这样绑定事件，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(window).on(&apos;mousemove&apos;, _.debounce(moveHandler, 500));</span><br></pre></td></tr></table></figure>
+<p>并频繁移动鼠标时，你会发现 moveHandler 压根没有被调用过！直到你停下来后，moveHandler 才会被调用一次。</p>
+<p>至于 _.throttle 方法，只不过是多给 debounce 传了 maxWait、leading=true、trailing=true 选项，这些选项的意思是至少保证在每 maxWait 时间让 func 被调用一次。</p>
+<p>说到这儿，你应该就明白了为什么会出现上图那样的调用情况。如果你频繁的移动鼠标，throttle 会保证在每 maxWait 时间调用 func 一次，而 debounce 如果没有明确设置 maxWait，是一直不会调用 func 直到你停止移动鼠标后才会调用一次。</p>
+<blockquote>
+<p>因此，可以笼统的说 <em>.throttle 就是设置了 leading=true, trailing=true 及 maxWait 的 </em>.debounce。</p>
+</blockquote>
+<p><strong>那什么时候该用 debounce 什么时候该用 throttle 呢？</strong></p>
+<p>下面我列举了一些场景：</p>
+<ul>
+<li>input 中输入文字自动发送 ajax 请求进行自动补全： debounce</li>
+<li>resize window 重新计算样式或布局：debounce</li>
+<li>mouseleave 时隐藏二级菜单：debounce，并合理使用 cancel 方法</li>
+<li>scroll 时更新样式，如随动效果：throttle</li>
+</ul>
+<p>最重要的还是理解两者对调用时间及次数上的处理，根据业务逻辑选择最合适的优化方案！</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

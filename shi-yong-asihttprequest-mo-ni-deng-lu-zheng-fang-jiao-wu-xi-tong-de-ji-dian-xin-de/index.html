@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用 ASIHttpRequest 模拟登陆正方教务系统的几点心得 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="终于成功了！终于成功在 iOS 系统上模拟登陆了正方教务系统，这样我的 正方教务系统 iOS 客户端计划很快就会实现了！感谢 Chrome，感谢 ASIHttpRequest，感谢 StackOverFlow，感谢 Google，感谢 Apple！
+其实有模拟登陆这个想法很久了，但是当时（大约1年前">
+  
+
+  
+  
+  <meta name="keywords" content="asihttprequest,模拟登录,正方教务系统">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="使用 ASIHttpRequest 模拟登陆正方教务系统的几点心得"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>使用 ASIHttpRequest 模拟登陆正方教务系统的几点心得</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/shi-yong-asihttprequest-mo-ni-deng-lu-zheng-fang-jiao-wu-xi-tong-de-ji-dian-xin-de/" rel="bookmark">
+        <time class="entry-date published" datetime="2012-09-25T18:54:28.000Z">
+          2012-09-26
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/使用-ASIHttpRequest-模拟登陆正方教务系统的几点心得.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>终于成功了！终于成功在 iOS 系统上模拟登陆了正方教务系统，这样我的 正方教务系统 iOS 客户端计划很快就会实现了！感谢 Chrome，感谢 ASIHttpRequest，感谢 StackOverFlow，感谢 Google，感谢 Apple！</p>
+<p>其实有模拟登陆这个想法很久了，但是当时（大约1年前）的自己知识储备完全不够，根本不理解各种 HTTP 协议、状态码、header 什么的，cookies 也不懂，做网站的这一年多来学习的 B/S 知识真是大大的拓展了我的视野！当然不可否认的是将来学习的路还很长，还很远，我要继续努力！</p>
+<p>这篇文章主要记录我使用 ASIHttpRequest 框架成功登陆正方教务系统（含验证码输入功能）的过程中的几点心得，记下来和大家一起分享！</p>
+<p>1、忽视 <strong>VIEWSTATE 参数，这个参数在提交表单是会自动提交，在 html 中它是一个 hidden 的 input 标签，这个 </strong>VIEWSTATE 貌似是一个 ASP.NET 专属的 XX 玩意儿，如果你没有在 POST 操作中增加这一项，那么铁定不能成功。我的解决方法是第一次直接获取登陆界面，在 responseString 中利用子串把 __VIEWSTATE 的值提取并保存出来，好在提交表单时提交。</p>
+<p><pre class="lang:objc decode:true brush: cpp;fontsize: 100; first-line: 1;">NSString *preVIEW = [request responseString];</pre></p>
+<p>NSRange range = [preVIEW rangeOfString:@”&lt;input type=”hidden” name=”__VIEWSTATE” value=””];</p>
+<p>self.code = [preVIEW substringWithRange:NSMakeRange(range.location + 47, 48)];<br>当然，我知道这样的代码一点都不美，但是它有效，而且不需要引入第三方正则库……所以，暂且就这样吧！、</p>
+<p><blockquote>更新：目前 iOS 已经内置正则支持，使用正则匹配来获取 viewstate 值是更好的方法。</blockquote><br>2、忽视 URLENCODE，提交登陆表单时进行 URLENCODE 是一个基本的做法，其实 ASIHTTPREQUEST 已经帮我们实现了 URLENCODE。但是！但是！正方教务系统的 charset 是 gb2312，而 ASIHttpRequest 的默认编码格式是 UTF8，这样你 encode 完 post 过去依然无法登陆</p>
+<p><pre class="lang:objc decode:true brush: cpp;fontsize: 100; first-line: 1;">NSStringEncoding enc = CFStringConvertEncodingToNSStringEncoding (kCFStringEncodingGB_18030_2000);</pre></p>
+<p>[request setStringEncoding:enc];<br>加上这两句后再用 ASIFormDataRequest 提交数据时 urlencode 就会自动用 gb2312 了</p>
+<p>3、cookie 提交，由于现在的教务系统需要输入验证码，而获取验证码会导致原来的 Session 失效，这个问题也困扰了我很久，最后的解决方法是在请求验证码（包括最后提交表单时）在 header 中设置 【Cookie】 为 Session ，并且同时提交 cookies（这个 cookies 在第一次发送请求并获得返回数据时保存）</p>
+<p><pre class="lang:objc decode:true brush: cpp;fontsize: 100; first-line: 1;">//第一次请求数据时保存 cookie</pre></p>
+<p>self.cookies = [request responseCookies];</p>
+<p>//请求验证码时发送 cookies 同时在 header 设置 Session</p>
+<p>NSArray *headerValue = [NSArray arrayWithObjects:self.session, nil];</p>
+<p>NSArray *headerKey = [NSArray arrayWithObjects:@”Cookie”, nil];</p>
+<p>[request setRequestHeaders:[NSMutableDictionary dictionaryWithObjects:headerValue forKeys:headerKey]];</p>
+<p>[request setRequestCookies:[self.cookies mutableCopy]];</p>
+<p>//最后表单提交时同理<br>以上三点为主要收获，另外还有一些在实践中解决的困惑也记下来，免得大家重蹈覆辙：</p>
+<p>1、在模拟提交表单时，并不需要设置太多的 header，这样反而会导致服务器出现 500 的 responsestatuscode。一般来说 header 里设置个 cookie 就够了。</p>
+<p>2、若模拟登陆后存在一个页面跳转，ASIHttpRequest 会自动帮你跳转。比如登陆正方教务系统时，表单提交的 action 对象是 default2.aspx。如果登陆成功会在 header 中返回 location :/ xl.aspx=1xxxxxxx ，这个时候 ASIHttpRequest 会自动获取新的地址的数据并返回。这个功能可以通过设置进行取消，但是具体还没有研究。</p>
+<p>基本就是这么多，在网上几乎搜不到关于正方教务系统的模拟登陆 demo，等我的客户端完全做好后会考虑开源给大家共同学习、进步！</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/asihttprequest/">asihttprequest</a><a href="/tags/模拟登录/">模拟登录</a><a href="/tags/正方教务系统/">正方教务系统</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

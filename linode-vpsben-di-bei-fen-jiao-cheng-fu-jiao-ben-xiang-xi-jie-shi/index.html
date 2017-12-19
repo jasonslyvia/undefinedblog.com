@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linode VPS本地备份教程[附脚本详细解释] | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="废话不多说，直接上代码，解释为 &amp;ldquo;#&amp;rdquo; 后面的文字，代码后面附上了详细的使用方法。#!/bin/bash#basedir 为保存备份文件的目录名，无需更改basedir=/backup/dailyPATH=/bin:/usr/bin:/sbin:/usr/sbin; expo">
+  
+
+  
+  
+  <meta name="keywords" content="bash,vps">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="Linode VPS本地备份教程[附脚本详细解释]"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>Linode VPS本地备份教程[附脚本详细解释]</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/linode-vpsben-di-bei-fen-jiao-cheng-fu-jiao-ben-xiang-xi-jie-shi/" rel="bookmark">
+        <time class="entry-date published" datetime="2012-11-09T05:40:22.000Z">
+          2012-11-09
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/Linode-VPS本地备份教程-附脚本详细解释.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>废话不多说，直接上代码，解释为 &ldquo;#&rdquo; 后面的文字，代码后面附上了详细的使用方法。</p><br><pre class="brush: bash;fontsize: 100; first-line: 1; ">#!/bin/bash<br>#basedir 为保存备份文件的目录名，无需更改<br>basedir=/backup/daily<br>PATH=/bin:/usr/bin:/sbin:/usr/sbin; export PATH<br>export LANG=C<br><br>#www 和 sqld 分别代表保存备份文件的两个子目录名，无需更改<br>wwwd=$basedir/www<br>sqld=$basedir/sql<br><br>#创建保存备份文件的目录<br>for dirs in $wwwd $sqld<br>do<br>[ ! -d “$dirs” ] &amp;&amp; mkdir -p $dirs<br>done<br><br>#将下面一行中的 YOURPASSWARD 更改为你的数据库密码<br>/usr/local/mysql/bin/mysqldump -uroot -pYOURPASSWARD –all-databases &gt; $sqld/mysql.$(date +%Y-%m-%d).tar.bz2<br><br>cd /home/<br><br>#将下面一行中的 wwwroot 改为你存放网站文件的目录，一般不是 wwwroot 就是 www<br>tar -jpc -f $wwwd/www.$(date +%Y-%m-%d).tar.bz2 wwwroot<br>rm -rf $sqld/mysql.$(date +%Y-%m-%d -d “2 days ago”).tar.bz2<br>rm -rf $wwwq/www.$(date +%Y-%m-%d -d “2 days ago”).tar.bz2<br></pre><br><h2>Linode VPS 本地备份脚本使用方法</h2><br><p>1、将以上代码复制，打开 PuTTy（或其他 SSH 软件），连接到你的 VPS（注意修改需要修改的部分，详见注释）</p><br><p>2、输入</p><br><blockquote><br><p><strong>vim backup.sh</strong></p><br></blockquote><br><p>3、按下键盘上的 i 键进入编辑状态，此时在 PuTTy 的界面单击右键，刚才复制的代码就粘贴进去了</p><br><p>4、按下键盘的 ESC 键，再按下 SHIFT + ; （即输入 ： ），再输入 wq，按回车，就保存好了脚本</p><br><blockquote><br><p>相当于输入了 <strong>:wq</strong> 这三个字符</p><br></blockquote><br><p>5、输入</p><br><blockquote><br><p><strong>sh backup.sh</strong></p><br></blockquote><br><p>系统就开始自动执行备份脚本了</p><br><p>6、脚本执行结束后，在 /backup/daily/ 下出现两个文件夹，一个是 sql，一个是 www，分别储存着数据库备份文件和网站文件的备份。</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/bash/">bash</a><a href="/tags/vps/">vps</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

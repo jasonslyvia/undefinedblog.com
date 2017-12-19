@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>正式将博客迁移到GAE 改用Micolog | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="想把博客换到别的主机主要是因为这两天 VPS 经常 502 Bad Gateway，想想也是，在一个 VPS 上放了 5 个 Wordpress，日 PV 5000，对于一个 512 M 的 VPS 来说压力还是有点大。本来准备买个便宜点儿的虚拟主机将就用用，但是突然想到 GAE 每天有免费的 1G">
+  
+
+  
+  
+  <meta name="keywords" content="micolog,python,gae">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="正式将博客迁移到GAE 改用Micolog"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>正式将博客迁移到GAE 改用Micolog</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/migrate-to-gae-using-micolog/" rel="bookmark">
+        <time class="entry-date published" datetime="2012-11-22T15:06:35.000Z">
+          2012-11-22
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/正式将博客迁移到GAE-改用Micolog.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>想把博客换到别的主机主要是因为这两天 VPS 经常 502 Bad Gateway，想想也是，在一个 VPS 上放了 5 个 Wordpress，日 PV 5000，对于一个 512 M 的 VPS 来说压力还是有点大。本来准备买个便宜点儿的虚拟主机将就用用，但是突然想到 GAE 每天有免费的 1G 流量。对于我这个每天 IP 不到 100 的小博客来说，GAE 完全够用了。</p><br><p>因此昨晚决定把博客迁到 GAE 上，但是遇到了这么几个问题：</p><br><h2>GAE 不支持 PHP，而博客原来使用的是 Wordpress</h2><br><p>有两种解决方案：更换 Python 博客程序或者在 GAE 上跑 Java 虚拟机来解释 PHP</p><br><p>经过一番挣扎后我选择了前者，虽然两者对我来说都没有接触过，但是想想觉得后者还是麻烦一些。</p><br><p>所以我就搜索到了 Micolog，看起来似乎作者就是照着 Wordpress 做的，因此基本功能上和 Wordpress 没有太多的区别。各种模板文件打开能够看到 Wordpress 主题文件的影子，虽然 Python 语法让我看着头晕&hellip;&hellip;</p><br><h2>一些针对 Micolog 的 Mod</h2><br><ul><br><li>上传好博客程序后，从 Wordpress 导出了所有的文章、页面和评论，然后用 Micolog 原生的一个插件导入，但是遇到一些问题。Wordpress 默认会去掉文章中的 p 标签，这导致文章导入 Micolog 后没有 p 标签，对于板式来说简直就是灾难。</li><br><li>另外 Micolog 默认不支持自动生成摘要，所以在首页显示文章列表时会自动输出全文，这可不好。</li><br><li>主题的样式不是很好看</li><br><li>友情链接不能只在主页显示</li><br></ul><br><p>这些问题今天都被我解决了，抽空慢慢总结放出。</p><br><p>最后比较担心的是伟大的 GFW，虽然 GAE 可以绑定自定义域名，虽然现在还能正确访问。但是不知道哪天 GFW 一不高兴就给墙了，到时候后就得另想办法了！</p><br><p>&nbsp;</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/micolog/">micolog</a><a href="/tags/python/">python</a><a href="/tags/gae/">gae</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

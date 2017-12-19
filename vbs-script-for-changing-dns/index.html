@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>一键快速切换/还原DNS设置脚本 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="学校的 DNS 越来越不给力了，打开一些网页时经常出现连接超时的现象。虽然不能确定 DNS 服务器到底出了啥问题，但是可以确定换用 114 或者 Google 的 DNS 肯定能够更快的请求到资源。
+问题来了，尽管设置完新的 DNS 后可以用的很爽，但是某些时候需要用到内网资源，比如网关登录系统时，">
+  
+
+  
+  
+  <meta name="keywords" content="dns,vbs">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="一键快速切换/还原DNS设置脚本"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>一键快速切换/还原DNS设置脚本</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/vbs-script-for-changing-dns/" rel="bookmark">
+        <time class="entry-date published" datetime="2013-05-16T18:54:10.000Z">
+          2013-05-17
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/一键快速切换-还原DNS设置脚本.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>学校的 DNS 越来越不给力了，打开一些网页时经常出现连接超时的现象。虽然不能确定 DNS 服务器到底出了啥问题，但是可以确定换用 114 或者 Google 的 DNS 肯定能够更快的请求到资源。</p>
+<p>问题来了，尽管设置完新的 DNS 后可以用的很爽，但是某些时候需要用到内网资源，比如网关登录系统时，更换 DNS 将导致这些请求无法被正确转发。这时，不得不再手动的把 DNS 切换回默认设置。</p>
+<p><img class="aligncenter size-full wp-image-207067" title="这样来来回回的设置 DNS 真的很烦人" alt="Windows 7设置DNS" src="http://undefinedblog.com/wp-content/uploads/2013/05/Windows-DNS.png" width="419" height="434"></p>
+<p>这种无脑又费时费力的工作当然是程序员不能容忍的，于是，解决方案来了。</p>
+<p></p><h2>Windows 版</h2><p></p>
+<p></p><h3>设置</h3><p></p>
+<pre class="lang:vb decode:true">strComputer = "."
+arrDNSServers = Array("114.114.114.114", "114.114.115.115")
+
+Set objWMIService = GetObject("winmgmts:" _
+  &amp; "{impersonationLevel=impersonate}!\\" &amp; strComputer &amp; "\root\cimv2")
+Set Nics = objWMIService.ExecQuery _
+  ("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled = True")
+
+For Each Nic In Nics
+  intSetDNSServers = Nic.SetDNSServerSearchOrder(arrDNSServers)
+  If intSetDNSServers = 0 Then
+    WScript.Echo "已切换为114 DNS"
+  End If
+Next</pre>
+<h3>恢复</h3>
+<pre class="lang:vb decode:true">strComputer = "."
+
+Set objWMIService = GetObject("winmgmts:" &amp; "{impersonationLevel=impersonate}!\\" &amp; strComputer &amp; "\root\cimv2")
+
+Set colNetAdapters = objWMIService.ExecQuery("Select * from Win32_NetworkAdapterConfiguration where IPEnabled=TRUE")
+
+For Each objNetAdapter In colNetAdapters
+errEnable = objNetAdapter.EnableDHCP()
+errDNS = objNetAdapter.SetDNSServerSearchOrder(null)
+Next
+If intSetDNSServers = 0 Then
+WScript.Echo "已恢复为默认 DNS"
+  End If</pre>
+<h3>使用方法</h3>
+将上述两个脚本分别保存为「设置DNS.vbs」和「恢复DNS.vbs」，当然文件名可以自拟，但是确保扩展名设置正确，然后双击运行即可。
+
+如果系统默认没有关联 vbs 的解释引擎，可以打开注册表，找到「HKEY_CLASSES_ROOT」-「.vbs」，双击右侧「默认」键，将其值改为「VBSFile」后即可。
+
+注意，「设置 DNS.vbs」中默认的 DNS 设置为 114 的 DNS，这个 DNS 在国内来说效果很不错了。如果你需要换用 Google 或其它的 DNS，修改第 2 行的内容即可。
+<h2>OS X 版</h2>
+<pre class="lang:sh decode:true">##设置DNS
+sudo networksetup -setdnsservers Wi-Fi 114.114.114.114 114.114.115.115"
+sudo networksetup -setdnsservers Wi-Fi 8.8.8.8 8.8.4.4
+#恢复默认DNS
+sudo networksetup -setdnsservers Wi-Fi empty</pre>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/dns/">dns</a><a href="/tags/vbs/">vbs</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

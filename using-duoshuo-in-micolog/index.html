@@ -1,0 +1,174 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>在Micolog中使用多说 | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="多说是一个很好的社会化评论系统，由于 Micolog 自身的评论功能实在太烂，所以一狠心直接换了多说。以前用多说都是在 Wordpress 平台中，直接装插件就可以，那如何在 Micolog 中使用多说呢？首先你需要去多说申请一个新的站点 &amp;nbsp; 点这里申请然后将获取到的代码放到主题的 com">
+  
+
+  
+  
+  <meta name="keywords" content="micolog,duoshuo">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <meta property="og:title" content="在Micolog中使用多说"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post">
+
+  
+    
+    <h3 class="article-title"><span>在Micolog中使用多说</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/using-duoshuo-in-micolog/" rel="bookmark">
+        <time class="entry-date published" datetime="2012-11-29T11:42:19.000Z">
+          2012-11-29
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/在Micolog中使用多说.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>多说是一个很好的社会化评论系统，由于 Micolog 自身的评论功能实在太烂，所以一狠心直接换了多说。以前用多说都是在 Wordpress 平台中，直接装插件就可以，那如何在 Micolog 中使用多说呢？</p><br><p>首先你需要去多说申请一个新的站点 &nbsp; <a href="http://duoshuo.com/create-site/" target="_blank">点这里申请</a></p><br><p>然后将获取到的代码放到主题的 comment.html 中，注意进行如下的修改：</p><br><p>在评论框的显示层中，添加 data-thread-key 等多项参数，可以让多说更好的整合进 Micolog，更智能的识别文章和分页。<br><br>&nbsp;</p><br><pre class="brush: xml;fontsize: 100; first-line: 1; ">&lt;!– Duoshuo Comment BEGIN –&gt;<br>&lt;div class=”ds-thread” data-thread-key=”“ data-title=”“ data-author-key=”“ data-category=”“ data-url=”“&gt;&lt;/div&gt;<br>&lt;script type=”text/javascript”&gt;<br>var duoshuoQuery = {short_name:”devppios”};<br>(function() {<br>    var ds = document.createElement(‘script’);<br>    ds.type = ‘text/javascript’;ds.async = true;<br>    ds.src = ‘<a href="http://static.duoshuo.com/embed.js" target="_blank" rel="noopener">http://static.duoshuo.com/embed.js</a>‘;<br>    ds.charset = ‘UTF-8’;<br>    (document.getElementsByTagName(‘head’)[0]<br>    || document.getElementsByTagName(‘body’)[0]).appendChild(ds);<br>})();<br>&lt;/script&gt;<br>&lt;!– Duoshuo Comment END –&gt;</pre><br><p>&nbsp;<br><br>使用以上代码完全替换掉 comment.html 中原有的所有代码即可。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/micolog/">micolog</a><a href="/tags/duoshuo/">duoshuo</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank rel="nofollow"">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    </br>
+    
+    &copy; 2017 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>
