@@ -519,6 +519,9 @@ header .site-navigation ul li a:hover {
 .posts-loop article.single-post .article-title {
   font-size: 3rem;
 }
+.single-page blockquote {
+  margin-bottom: 0;
+}
 article {
   position: relative;
   padding: 8rem 0;
@@ -713,7 +716,7 @@ article.archive {
 }
 .archive-post .archive-title {
   font-size: 2em;
-  line-height: 2;
+  line-height: 1.4;
   position: relative;
   color: #212121;
   margin: 0;
@@ -729,9 +732,6 @@ article.archive {
 }
 .archive-post .archive-title a:hover {
   color: #212121;
-}
-.archive-post .archive-title a:hover span {
-  box-shadow: inset 0 -2px 0 rgba(240,56,56,0.4);
 }
 .archive-post time {
   font-style: italic;
