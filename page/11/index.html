@@ -70,6 +70,61 @@
 
   
     
+    <h3 class="article-title"><a href="/ru-he-rang-zheng-he-you-yan-de-wordpressbo-ke-xian-shi-zheng-que-de-ping-lun-shu/"><span>如何让整合友言的Wordpress博客显示正确的评论数</span></a></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/ru-he-rang-zheng-he-you-yan-de-wordpressbo-ke-xian-shi-zheng-que-de-ping-lun-shu/" rel="bookmark">
+        <time class="entry-date published" datetime="2011-11-25T20:03:08.000Z">
+          2011-11-25
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/如何让整合友言的Wordpress博客显示正确的评论数.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>友言（uyan.cc）是一个社会化评论聚合网站，使用友言提供的社交评论框代替Wordpress自带的评论框，可以让你的网站与SNS连接的更紧，也方便网友直接在SNS里对网站的内容进行评论。<br><br>但是由于友言使用了&lt;iframe&gt;结构，且评论机制不同于Wordpress原生评论，因此Wordpress主题自带的显示评论计数的函数就没用了。下面ppiOS就教大家如何解决这一问题。</p>
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+    <div class="article-meta pull-right">
+      <span>
+        <i class="icon-comments"></i>
+        <span>
+          <a href="/ru-he-rang-zheng-he-you-yan-de-wordpressbo-ke-xian-shi-zheng-que-de-ping-lun-shu/#comment">评论</a>
+        </span>
+      </span>
+    </div>
+    
+  </div>
+</article>
+
+
+
+  <article class="  single-page">
+
+  
+    
     <h3 class="article-title"><a href="/its-time-to-do-something-cool-du-shi-di-fu-qiao-bu-si-chuan-you-gan/"><span>It&amp;#39;s time to do something cool —— 读《史蒂夫·乔布斯传》有感</span></a></h3>
     
   
@@ -559,61 +614,6 @@
         <i class="icon-comments"></i>
         <span>
           <a href="/iphonekai-fa-ru-he-cong-appnei-bu-jia-zai-htmlwen-jian/#comment">评论</a>
-        </span>
-      </span>
-    </div>
-    
-  </div>
-</article>
-
-
-
-  <article class="  single-page">
-
-  
-    
-    <h3 class="article-title"><a href="/ru-he-jie-jue-jian-pan-zhe-dang-uitextfieldde-wen-ti/"><span>如何解决键盘遮挡 UITextField的问题？</span></a></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/ru-he-jie-jue-jian-pan-zhe-dang-uitextfieldde-wen-ti/" rel="bookmark">
-        <time class="entry-date published" datetime="2011-10-17T11:16:13.000Z">
-          2011-10-17
-        </time>
-      </a>
-      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/如何解决键盘遮挡-UITextField的问题？.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
-    </span>
-  </div>
-
-
-  
-
-  <div class="article-content">
-    <div class="entry">
-      
-        <p>可以将遮住的界面移动到。软键盘出来的时候就将界面移动，输入完成，移回到原来的位置<br><br>[cc lang=”c”]<br><br>-(BOOL)textFieldShouldReturn:(id)sender<br><br>{<br><br>    self.view.center = CGPointMake(240,160);<br><br>    [sender resignFirstResponder];<br><br>    return YES;<br><br>}<br><br>- (BOOL)textFieldShouldBeginEditing:(id)sender<br><br>{<br><br>    if(sender==emailText)<br><br>    {<br><br>        self.center=CGPointMake(self.center.x,80);<br><br>    }<br><br>    else if(sender==speechText)<br><br>    {<br><br>        self.center=CGPointMake(self.center.x,0);<br><br>    }<br><br>    return YES;<br><br>}<br><br>[/cc]</p>
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-
-    </div>
-
-    
-    <div class="article-meta pull-right">
-      <span>
-        <i class="icon-comments"></i>
-        <span>
-          <a href="/ru-he-jie-jue-jian-pan-zhe-dang-uitextfieldde-wen-ti/#comment">评论</a>
         </span>
       </span>
     </div>
