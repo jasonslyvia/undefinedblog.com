@@ -70,7 +70,7 @@
 
 
     <main class="site-main posts-loop">
-    <article class=" single-post  single-page">
+    <article class=" single-post ">
 
   
     
@@ -169,15 +169,13 @@
 <p>另外，Require JS 定义的模块并不一定是 function，也可以是普通的对象，详见 <a href="http://requirejs.org/docs/api.html#define" target="_blank" rel="noopener">Require JS 文档</a>。</p>
 <p><strong>将解耦后的代码改写为 Require JS 模块</strong></p>
 <p>我们在上面把一个简单的 ajax 调用解耦成 4 个独立的模块，下面我们就把这 4 个模块根据 Require JS 定义模块的风格进行改写。</p>
-<p><pre class="lang:js decode:true brush: jscript;fontsize: 100; first-line: 1;">//config.js</pre></p>
-<p>define([],<br>    function () {<br>        var baseUrl = ‘/api/messenger/‘;</p>
+<p><pre class="lang:js decode:true brush: jscript;fontsize: 100; first-line: 1;">//config.js<br>define([],<br>    function () {<br>        var baseUrl = ‘/api/messenger/‘;</pre></p>
 <pre><code>    return {
         baseUrl: baseUrl
     };
 }
 </code></pre><p>);</p>
-<p>//dataservice.js</p>
-<p>define([‘jquery’, ‘config’],<br>    function ($, config) {<br>        var<br>            callApi = function (url, type, callback) {<br>                $.ajax({<br>                    url: url,<br>                    type: type,<br>                    dataType: ‘json’,<br>                    success: function (data) {<br>                        callback(data);<br>                    }<br>                });<br>            },</p>
+<p>//dataservice.js<br>define([‘jquery’, ‘config’],<br>    function ($, config) {<br>        var<br>            callApi = function (url, type, callback) {<br>                $.ajax({<br>                    url: url,<br>                    type: type,<br>                    dataType: ‘json’,<br>                    success: function (data) {<br>                        callback(data);<br>                    }<br>                });<br>            },</p>
 <pre><code>        getMessage = function (id, callback) {
             url = config.baseUrl + id;
             callApi(url, &apos;GET&apos;, callback);
@@ -188,8 +186,7 @@
     };
 }
 </code></pre><p>);</p>
-<p>//messenger.js</p>
-<p>define([‘jquery’, ‘dataservice’],<br>    function ($, dataservice) {<br>        var showMessage = function (id) {<br>            dataservice.getMessage(id, function (message) {<br>                $(“#messagebox”).html(message);<br>            });<br>        };</p>
+<p>//messenger.js<br>define([‘jquery’, ‘dataservice’],<br>    function ($, dataservice) {<br>        var showMessage = function (id) {<br>            dataservice.getMessage(id, function (message) {<br>                $(“#messagebox”).html(message);<br>            });<br>        };</p>
 <pre><code>    return {
         showMessage: showMessage
     };

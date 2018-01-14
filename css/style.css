@@ -526,6 +526,19 @@ article {
   position: relative;
   padding: 8rem 0;
 }
+article p + .caption {
+  margin-top: -2rem;
+  margin-bottom: 3rem;
+}
+article .caption {
+  text-align: center;
+  font-size: 0.9em;
+  color: #999;
+}
+article ul li,
+article ol li {
+  margin: 0.5rem 0;
+}
 article a {
   color: #0074d9;
 }

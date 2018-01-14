@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入理解 Service Worker | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="PWA 作为 2018 年前端领域最火的技术之一已经引起了越来越多开发者的关注，其媲美 native app 的交互体验以及对前端开发者友好的入门难度让人不得不怀疑它将掀起新一轮的「App 技术革命」。而 PWA 最核心的「离线」能力，正是通过对 ServiceWorker 这个概念的灵活使用实现的">
+  
+
+  
+  
+  <meta name="keywords" content="ServiceWorker,PWA">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/favicon/manifest.json">
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <meta property="og:title" content="深入理解 Service Worker"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+        <li><a href="/subscribe">订阅</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post ">
+
+  
+    
+    <h3 class="article-title"><span>深入理解 Service Worker</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/dive-into-service-worker/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-14T08:57:33.000Z">
+          2018-01-14
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/深入理解-Service-Worker.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <p>PWA 作为 2018 年前端领域最火的技术之一已经引起了越来越多开发者的关注，其媲美 native app 的交互体验以及对前端开发者友好的入门难度让人不得不怀疑它将掀起新一轮的「App 技术革命」。而 PWA 最核心的「离线」能力，正是通过对 ServiceWorker 这个概念的灵活使用实现的。</p>
+<p>在没有深入理解 Service Worker 之前，我总觉得 PWA 无非是在构建的时候使用类似 webpack OfflinePlugin 之类的插件把所有的静态资源缓存起来做成离线应用即可。但是当深入学习了 ServiceWorker 及 CacheStorage 的设计思想、API 规范甚至是发展历程后，我才真正了解到做一个完整的 PWA 是一件多么复杂的事情。</p>
+<p>基于我最近一个月对 ServiceWorker 的学习，结合在几个实际业务中的使用情况，我将通过一个系列文章来为大家深入解读 Service Worker 的概念、原理、设计思想、实战玩法以及如何在 PWA 中发挥关键作用等等。</p>
+<p>系列文章将划分为如下三个部分：</p>
+<h3 id="理论部分"><a href="#理论部分" class="headerlink" title="理论部分"></a>理论部分</h3><ul>
+<li><a href="/what-is-service-worker">什么是 Service Worker</a></li>
+<li>怎么使用 Service Worker</li>
+<li>Service Worker 的生命周期</li>
+<li>什么是 CacheStorage</li>
+<li>如何在 Service Worker 中使用 CacheStorage</li>
+<li>Service Worker 是否足够成熟（截止 2018 年 1 月）</li>
+</ul>
+<h3 id="实践部分"><a href="#实践部分" class="headerlink" title="实践部分"></a>实践部分</h3><ul>
+<li>不同离线策略的差异与适用场景</li>
+<li>如何避免设计出永远不会更新的 Service Worker</li>
+<li>Service Worker 最佳实践</li>
+</ul>
+<h3 id="延伸阅读"><a href="#延伸阅读" class="headerlink" title="延伸阅读"></a>延伸阅读</h3><ul>
+<li>Service Worker 的前世今生</li>
+<li>PWA 和 AMP 的异同</li>
+</ul>
+<p>那么，让我们一起开始 Service Worker 的探索旅程吧！</p>
+<blockquote>
+<p>Service Worker 是一个相对比较新的技术，规范和浏览器厂商的落地都在不断的变化和升级。我力争在行文过程中遵循「先实践后结论」的方式，保证所有的内容都经过真实环境测试。</p>
+<p>如果文章存在任何错误，请点击文章标题下方的「查看源码」直接对本文编辑并提交 PR。</p>
+</blockquote>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+    
+
+    <span class="post-tags">
+      <i class="icon-tags"></i>
+        <a href="/tags/ServiceWorker/">ServiceWorker</a><a href="/tags/PWA/">PWA</a>
+    </span>
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2018 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>

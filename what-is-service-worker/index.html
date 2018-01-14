@@ -1,0 +1,211 @@
+<!DOCTYPE HTML>
+<html lang="zh-hans">
+<head>
+  <meta charset="utf-8">
+  
+  <title>什么是 Service Worker | undefined | everything starts &amp; ends</title>
+
+  
+  <meta name="author" content="jasonslyvia">
+  
+
+  
+  <meta name="description" content="本文是 深入理解 Service Worker 系列文章中的第一篇
+
+Service Worker 的定义Service Worker 听起来很像 Web Worker。
+根据 Service Worker 的规范定义，它正是 Web Worker 中的一种（严格的说，Service Worker ">
+  
+
+  
+  
+  <meta name="keywords" content="">
+  
+
+  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <link rel="manifest" href="/favicon/manifest.json">
+  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="theme-color" content="#ffffff">
+
+  <meta property="og:title" content="什么是 Service Worker"/>
+
+  <meta property="og:site_name" content="undefined"/>
+
+  
+  <meta property="og:image" content="/favicon.ico"/>
+  
+
+  <link href="/favicon.ico" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="undefined" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+</head>
+
+
+<body>
+<div class="blog">
+  <div class="content">
+
+    <header>
+  <div class="site-branding">
+    <h1 class="site-title">
+      <a href="/">undefined</a>
+    </h1>
+    <p class="site-description">everything starts &amp; ends</p>
+  </div>
+  <nav class="site-navigation">
+    <ul class=" dim">
+      
+        <li><a href="/">主页</a></li>
+      
+        <li><a href="/archives">归档</a></li>
+      
+        <li><a href="/about">关于</a></li>
+      
+        <li><a href="/subscribe">订阅</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    <main class="site-main posts-loop">
+    <article class=" single-post ">
+
+  
+    
+    <h3 class="article-title"><span>什么是 Service Worker</span></h3>
+    
+  
+
+  <div class="article-top-meta">
+    <span class="posted-on">
+      <a href="/what-is-service-worker/" rel="bookmark">
+        <time class="entry-date published" datetime="2018-01-14T09:14:26.000Z">
+          2018-01-14
+        </time>
+      </a>
+      <a href="https://github.com/jasonslyvia/undefinedblog/tree/master/source/_posts/什么是-Service-Worker.md" target="_blank" style="margin-left: 10px" rel="nofollow">查看源码</a>
+    </span>
+  </div>
+
+
+  
+
+  <div class="article-content">
+    <div class="entry">
+      
+        <blockquote>
+<p>本文是 <a href="/dive-into-service-worker">深入理解 Service Worker</a> 系列文章中的第一篇</p>
+</blockquote>
+<h2 id="Service-Worker-的定义"><a href="#Service-Worker-的定义" class="headerlink" title="Service Worker 的定义"></a>Service Worker 的定义</h2><p>Service Worker 听起来很像 Web Worker。</p>
+<p>根据 <a href="https://w3c.github.io/ServiceWorker/#service-worker-concept" target="_blank" rel="noopener">Service Worker 的规范定义</a>，它正是 Web Worker 中的一种（严格的说，Service Worker 应该是 <a href="https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker" target="_blank" rel="noopener">Shared Worker</a> 的一种），但更专注于对网络请求的拦截、后台数据更新等，这些能力正是为构建一个 PWA 打好了坚实的基础。</p>
+<p><img src="service worker.png" alt="service worker 概念"></p>
+<p class="caption">一个简化的 Service Worker 工作示意图</p>
+
+<p>如果你还不清楚什么是 Web Worker，可以把它简单的理解为一个独立于主线程执行的 JavaScript 模块（无论是一个独立的 <code>.js</code> 文件或者 <code>type=&quot;module&quot;</code>类型的 <code>&lt;script&gt;</code>标签）。之所以需要独立于主线程运行，是为了解决一些计算密集型的操作阻塞界面渲染和用户交互的问题。由于工作在不同的线程中，Web Worker 和主线程之间通过 postMessage 等方式进行通信。</p>
+<h2 id="Service-Worker-到底是什么"><a href="#Service-Worker-到底是什么" class="headerlink" title="Service Worker 到底是什么"></a>Service Worker 到底是什么</h2><p>只看定义可能很难对 Service Worker 有比较感性的认知，那我们直接上代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// service-worker.js</span></span><br><span class="line">self.addEventListener(<span class="string">'install'</span>, e =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'installing service worker'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">self.addEventListener(<span class="string">'activate'</span>, e =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'activating service worker'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">self.addEventListener(<span class="string">'fetch'</span>, e =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`fetching <span class="subst">$&#123;e.request.url&#125;</span>`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>上面的代码片段定义了一个很简单的 Service Worker，通过在页面上调用 <code>navigator.serviceWorker.register(&#39;/service-worker.js&#39;)</code> 即可将这个 Service Worker 注册到当前域下。</p>
+<p>关于 Service Worker 的注册及使用，会在第二篇《怎么使用 Service Worker》中进行详细介绍。现在，你只需要对 Service Worker 有一个初步的认识即可。</p>
+<h2 id="Service-Worker-的性质"><a href="#Service-Worker-的性质" class="headerlink" title="Service Worker 的性质"></a>Service Worker 的性质</h2><p>1. <strong>与 Web Worker 一样，因为运行在独立的线程中，Service Worker 无法直接进行任何 DOM 操作</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//service-worker.js</span></span><br><span class="line">self.addEventListener(<span class="string">'install'</span>, e =&gt; &#123;</span><br><span class="line">  alert(<span class="string">'注册成功'</span>);  <span class="comment">// TypeError, alert is not a function</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>2. <strong>Service Worker 运行在独立的全局上下文环境（<a href="https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerGlobalScope" target="_blank" rel="noopener">ServiceWorkerGlobalScope</a>）中</strong></p>
+<p>你可以通过 <code>self</code> 关键字在 Service Worker 代码的任意位置来指向这个全局环境，有点类似 node.js 中的 <code>global</code> 关键字。</p>
+<p>当然，这不意味着你只能在 Service Worker 中使用 <code>self</code>，<code>this</code> 依然可以被使用，只是考虑到各种作用域的变更（如箭头函数、bind 等），<code>self</code> 能够在任何位置、任何环境下永远指向这个全局作用域。</p>
+<p>3. <strong>Service Worker 仅能运行在 HTTPS 环境下</strong></p>
+<p>主要是考虑到网络请求拦截等能力的危险程度，但为了调试方便可以在 HTTP 环境的 localhost 中进行调试。</p>
+<p>4. <strong>Service Worker 的注册必选遵守「同源策略（Same Origin Policy）」</strong></p>
+<p>这也是很多人疑惑为什么注册一个 CDN 上的 Service Worker 会报错的问题所在，比如页面是 <code>https://www.exmaple.com</code>，注册一个 <code>https://cdn.example.com/service-worker.js</code>，就会导致跨域错误。</p>
+<p>5. <strong>Service Worker 有固定的作用范围，可以在注册时通过 <code>scope</code> 参数指定，若留空则自动根据 Service Worker 的 location 来判断</strong></p>
+<p>举个例子，若没有特别设置 <code>scope</code>， <code>https://www.example.com/sw.js</code> 的作用域就是 <code>/</code>，因此这个 Service Worker 可以拦截该域下页面的任意请求；但是 <code>https://www.example.com/folder/sw.js</code> 的作用域只能是 <code>/folder/</code>，若访问的页面是 <code>https://www.example.com/another-folder/index.html</code>，这个 Service Worker 不会拦截到任何的请求。</p>
+<p>因此一般来说，Service Worker 应该注册在根目录下，根据应用的需要指定 <code>scope</code> 即可。</p>
+<p>6. <strong>基于第 5 点性质，一个域下可以注册若干个 Service Worker，只要他们的 <code>scope</code> 不同即可</strong></p>
+<p>7. <strong>Service Worker 是事件驱动的</strong></p>
+<p>当事件触发时会执行 Service Worker 里注册的事件回调函数，当事件处理完成后会这个 Service Worker 对应的线程可能会被销毁。因此你无法在 Service Worker 中定义全局变量，如果需要持久化一些内容在不同的事件触发时进行传递，可以考虑使用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API" target="_blank" rel="noopener">IndexedDB</a>。</p>
+<p>8. <strong>Service Worker 一旦注册成功，便不依托于某个具体的页面存在</strong></p>
+<p>举个例子，你在 <code>https://www.example.com/index.html</code> 使用 <code>register(&#39;service-worker.js&#39;)</code> 成功注册了一个 Service Worker。关闭浏览器后重新访问 <code>https://www.example.com/index.html</code>，移除掉 <code>register(&#39;service-worker.js&#39;)</code> 的调用，之前注册的 Service Worker 依然会正常运行。</p>
+<p>9. <strong>Service Worker 在同源页面下是共享的</strong></p>
+<p>这一点从 「Service Worker 是 <a href="https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker" target="_blank" rel="noopener">Shared Worker</a> 的一种」可以推导出，不再单独解释。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>在这篇文章中，我们介绍了什么是 Service Worker、Service Worker 的性质，以及通过一个简短的例子让大家了解到了一个 Service Worker 长什么样子。</p>
+<p>由于 Service Worker 是从 Web Worker 和 Shared Worker 演化而来的 API，很多 Web Worker 的性质、用法等还需要读者再仔细研究。</p>
+
+      
+    </div>
+
+  </div>
+
+  <div class="article-footer">
+    <div class="article-meta pull-left">
+
+    
+
+    
+
+    </div>
+
+    
+  </div>
+</article>
+
+  
+	<section id="comments" class="comment">
+	  <div id="disqus_thread">
+	  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+	  </div>
+	</section>
+
+	<script type="text/javascript">
+	var disqus_shortname = 'undefinedblog';
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	(function(){
+	  var dsq = document.createElement('script');
+	  dsq.type = 'text/javascript';
+	  dsq.async = true;
+	  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+	  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	}());
+	</script>
+
+
+
+
+
+    </main>
+
+    <footer class="site-footer">
+  <p class="site-info">
+    Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
+    Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
+    <br />
+    
+    &copy; 2018 jasonslyvia
+    
+  </p>
+</footer>
+
+    
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-50332938-1', 'auto');
+    ga('send', 'pageview');
+
+</script>
+
+  </div>
+</div>
+</body>
+</html>
