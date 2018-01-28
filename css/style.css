@@ -662,9 +662,9 @@ article code {
   padding: 2px 4px;
   margin-left: 2px;
   margin-right: 2px;
-  color: #0074d9;
   white-space: normal;
   border-radius: 0;
+  font-family: Menlo, Consolas, monospace;
 }
 article p {
   margin: 2rem 0;
