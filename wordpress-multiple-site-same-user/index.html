@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="zh-hans">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
   <title>再谈多个 Wordpress 网站共享一份用户数据的实现[兼容3.9版本] | undefined | everything starts &amp; ends</title>
@@ -29,12 +29,12 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
 
-  <meta property="og:title" content="再谈多个 Wordpress 网站共享一份用户数据的实现[兼容3.9版本]"/>
+  <meta property="og:title" content="再谈多个 Wordpress 网站共享一份用户数据的实现[兼容3.9版本]">
 
-  <meta property="og:site_name" content="undefined"/>
+  <meta property="og:site_name" content="undefined">
 
   
-  <meta property="og:image" content="/favicon.ico"/>
+  <meta property="og:image" content="/favicon.ico">
   
 
   <link href="/favicon.ico" rel="icon">
@@ -101,6 +101,8 @@
 <p>废话不多说，直接开始！</p>
 <blockquote>
 <p>以下例子中所有的域名example.com请自行替换成你的域名</p>
+</blockquote>
+<blockquote>
 <p>阅读本文的前提是你已经有基本的网站部署知识，会部署单个Wordpress网站，知道如何给Wordpress配置数据库信息，了解Wordpress目录结构。</p>
 </blockquote>
 <p>##部署网站A</p>
@@ -120,7 +122,7 @@
 </li>
 </ol>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">'COOKIE_DOMAIN'</span>, <span class="string">'example.com'</span>);</span><br><span class="line">define(<span class="string">'COOKIEPATH'</span>, <span class="string">'/'</span>);</span><br></pre></td></tr></table></figure>
-<ol>
+<ol start="3">
 <li><p>若存在备用数据B（各种define的’XX_KEY’），将这些段落完整的粘贴到网站B的<code>wp-config.php</code>中。</p>
 </li>
 <li><p>将<code>$table_prefix  = &#39;wp_&#39;;</code>改为<code>$table_prefix  = &#39;xxx_&#39;;</code>（<code>xxx</code>是任意不同于<code>wp</code>的字符串）</p>
@@ -200,9 +202,9 @@
   <p class="site-info">
     Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
     Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
-    <br />
+    <br>
     
-    &copy; 2018 jasonslyvia
+    &copy; 2019 jasonslyvia
     
   </p>
 </footer>

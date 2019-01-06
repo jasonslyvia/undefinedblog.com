@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="zh-hans">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
   <title>如何自动调用Google自定义搜索引擎进行搜索 | undefined | everything starts &amp; ends</title>
@@ -28,12 +28,12 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
 
-  <meta property="og:title" content="如何自动调用Google自定义搜索引擎进行搜索"/>
+  <meta property="og:title" content="如何自动调用Google自定义搜索引擎进行搜索">
 
-  <meta property="og:site_name" content="undefined"/>
+  <meta property="og:site_name" content="undefined">
 
   
-  <meta property="og:image" content="/favicon.ico"/>
+  <meta property="og:image" content="/favicon.ico">
   
 
   <link href="/favicon.ico" rel="icon">
@@ -99,8 +99,8 @@
 <p>关于如何申请 CSE 这里不再赘述，假设你已经申请好了 CSE。</p>
 <p><strong>HTML</strong></p>
 <p><pre class="brush: xml;fontsize: 100; first-line: 1;">&lt;div id=”cse-search-form” style=”width: 100%;display:none;”&gt;Loading&lt;/div&gt;</pre><br><strong>JS</strong></p>
-<p><pre class="lang:js decode:true brush: jscript;fontsize: 100; first-line: 1;">&lt;script src=”<a href="http://www.google.com.hk/jsapi" target="_blank" rel="noopener">http://www.google.com.hk/jsapi</a>“ type=”text/javascript”&gt;&lt;/script&gt;<br>&lt;script type=”text/javascript”&gt;<br>  google.load(‘search’, ‘1’, {language : ‘zh-CN’});<br>  google.setOnLoadCallback(function() {<br>    //获取需要搜索的关键词并执行搜索，如下两行为关键代码<br>    var query = ‘苹果教程网’;<br>    customSearchControl.execute(query);<br>    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(<br>      ‘001212031995655897722:skb-lu6f7zo’, customSearchOptions);<br>    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);<br>    var options = new google.search.DrawOptions();<br>    options.setSearchFormRoot(‘cse-search-form’);<br>    options.setAutoComplete(true);<br>    customSearchControl.setAutoCompletionId(‘001212031995655897722:skb-lu6f7zo+qptype:1’);<br>    customSearchControl.draw(‘cse’, options);<br>  }, true);<br>&lt;/script&gt;</pre><br><strong>搜索结果</strong></p>
-<p><pre class="brush: xml;fontsize: 100; first-line: 1;">&lt;link rel=”stylesheet” href=”<a href="http://www.google.com/cse/style/look/default.css" target="_blank" rel="noopener">http://www.google.com/cse/style/look/default.css</a>“ type=”text/css” /&gt;<br>&lt;div id=”cse” style=”width:100%;”&gt;&lt;/div&gt;</pre><br>简单来说，整个功能的核心语句就是</p>
+<p><pre class="lang:js decode:true brush: jscript;fontsize: 100; first-line: 1;">&lt;script src=”<a href="http://www.google.com.hk/jsapi&quot;" target="_blank" rel="noopener">http://www.google.com.hk/jsapi&quot;</a> type=”text/javascript”&gt;&lt;/script&gt;<br>&lt;script type=”text/javascript”&gt;<br>  google.load(‘search’, ‘1’, {language : ‘zh-CN’});<br>  google.setOnLoadCallback(function() {<br>    //获取需要搜索的关键词并执行搜索，如下两行为关键代码<br>    var query = ‘苹果教程网’;<br>    customSearchControl.execute(query);<br>    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(<br>      ‘001212031995655897722:skb-lu6f7zo’, customSearchOptions);<br>    customSearchControl.setResultSetSize(google.search.Search.SMALL_RESULTSET);<br>    var options = new google.search.DrawOptions();<br>    options.setSearchFormRoot(‘cse-search-form’);<br>    options.setAutoComplete(true);<br>    customSearchControl.setAutoCompletionId(‘001212031995655897722:skb-lu6f7zo+qptype:1’);<br>    customSearchControl.draw(‘cse’, options);<br>  }, true);<br>&lt;/script&gt;</pre><br><strong>搜索结果</strong></p>
+<p><pre class="brush: xml;fontsize: 100; first-line: 1;">&lt;link rel=”stylesheet” href=”<a href="http://www.google.com/cse/style/look/default.css&quot;" target="_blank" rel="noopener">http://www.google.com/cse/style/look/default.css&quot;</a> type=”text/css” /&gt;<br>&lt;div id=”cse” style=”width:100%;”&gt;&lt;/div&gt;</pre><br>简单来说，整个功能的核心语句就是</p>
 <p><pre class="lang:js decode:true brush: jscript;fontsize: 100; first-line: 1;">customSearchControl.execute(query);</pre><br>自行判断在合适的位置调用该语句即可实现自动搜索（无需用户点搜索按钮，关键词需要预先设置好，即query变量）</p>
 
       
@@ -163,9 +163,9 @@
   <p class="site-info">
     Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
     Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
-    <br />
+    <br>
     
-    &copy; 2018 jasonslyvia
+    &copy; 2019 jasonslyvia
     
   </p>
 </footer>

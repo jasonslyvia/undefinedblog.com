@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="zh-hans">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
   <title>图解 debounce 与 throttle 的区别 | undefined | everything starts &amp; ends</title>
@@ -31,12 +31,12 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
 
-  <meta property="og:title" content="图解 debounce 与 throttle 的区别"/>
+  <meta property="og:title" content="图解 debounce 与 throttle 的区别">
 
-  <meta property="og:site_name" content="undefined"/>
+  <meta property="og:site_name" content="undefined">
 
   
-  <meta property="og:image" content="/favicon.ico"/>
+  <meta property="og:image" content="/favicon.ico">
   
 
   <link href="/favicon.ico" rel="icon">
@@ -103,7 +103,7 @@
 <p><img src="/content/images/2015/Jan/QQ20150125-1-2x.png" alt="debounce 与 throttle"></p>
 <p>注意到上图，第一行 <code>Mousemove Events</code> 展示了 <code>mousemove</code> 事件触发的频率。第二行和第三行是分别使用 underscore 与 jQuery 的 debounce 方法(leading 参数为true，保证一开始先调用一次目标函数)后事件的触发频率。第四、五行则是 trailing 参数为 true（保证 delay 结束调用一次）的触发频率。与之对比的是最后三行，使用的是 throttle 方法。</p>
 <p>首先我们的直观感觉是使用 debounce 方法相比于 throttle 方法事件触发的频率更低，但实际上不能这么理解。要解释上图的结果，首先需要了解 debounce 和 throttle 的原理。</p>
-<p>当我们阅读 lodash 的代码时会发现，throttle 方法不过是 debounce 方法的一个修饰。也就是说，<em>.throttle 和 </em>.debounce 最终都会都会调用 debounce 方法。那么 debounce 究竟是如何工作的呢？</p>
+<p>当我们阅读 lodash 的代码时会发现，throttle 方法不过是 debounce 方法的一个修饰。也就是说，_.throttle 和 _.debounce 最终都会都会调用 debounce 方法。那么 debounce 究竟是如何工作的呢？</p>
 <p>首先看 _.debounce 的 API：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_.debounce(func, delay, options);</span><br></pre></td></tr></table></figure>
 <p>func 是需要被调用的目标函数，delay 是时间限制，options 是一系列的配置，为了简化问题，这里不多提。</p>
@@ -114,7 +114,7 @@
 <p>至于 _.throttle 方法，只不过是多给 debounce 传了 maxWait、leading=true、trailing=true 选项，这些选项的意思是至少保证在每 maxWait 时间让 func 被调用一次。</p>
 <p>说到这儿，你应该就明白了为什么会出现上图那样的调用情况。如果你频繁的移动鼠标，throttle 会保证在每 maxWait 时间调用 func 一次，而 debounce 如果没有明确设置 maxWait，是一直不会调用 func 直到你停止移动鼠标后才会调用一次。</p>
 <blockquote>
-<p>因此，可以笼统的说 <em>.throttle 就是设置了 leading=true, trailing=true 及 maxWait 的 </em>.debounce。</p>
+<p>因此，可以笼统的说 _.throttle 就是设置了 leading=true, trailing=true 及 maxWait 的 _.debounce。</p>
 </blockquote>
 <p><strong>那什么时候该用 debounce 什么时候该用 throttle 呢？</strong></p>
 <p>下面我列举了一些场景：</p>
@@ -179,9 +179,9 @@
   <p class="site-info">
     Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
     Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
-    <br />
+    <br>
     
-    &copy; 2018 jasonslyvia
+    &copy; 2019 jasonslyvia
     
   </p>
 </footer>

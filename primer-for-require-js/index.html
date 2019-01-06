@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="zh-hans">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
   <title>RequireJS入门指导 | undefined | everything starts &amp; ends</title>
@@ -28,12 +28,12 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
 
-  <meta property="og:title" content="RequireJS入门指导"/>
+  <meta property="og:title" content="RequireJS入门指导">
 
-  <meta property="og:site_name" content="undefined"/>
+  <meta property="og:site_name" content="undefined">
 
   
-  <meta property="og:image" content="/favicon.ico"/>
+  <meta property="og:image" content="/favicon.ico">
   
 
   <link href="/favicon.ico" rel="icon">
@@ -102,7 +102,7 @@
 <p><ul><br>    <li>解耦代码，方便代码重用和管理</li><br>    <li>加速页面加载，内置优化引擎（需服务器支持），自动异步加载依赖项，将所有需要加载的文件自动合并为一个文件，减少 HTTP 请求</li><br></ul><br>Require JS 同时支持整合 jQuery、CommonJS、Node JS 等，而且对浏览器有不错的兼容性（IE 6+，你懂的）。</p>
 <p>&nbsp;</p>
 <p></p><h2>没有 Require JS 的时候</h2><br>下面我们将以一个没有使用 Require JS 的模块开始，讲讲如何将你的代码解耦并使用 Require JS 来加载：<p></p>
-<p><pre class="lang:xhtml decode:true">&lt;html xmlns=”<a href="http://www.w3.org/1999/xhtml&quot;&amp;gt" target="_blank" rel="noopener">http://www.w3.org/1999/xhtml&quot;&amp;gt</a>;<br>&lt;head&gt;<br>    &lt;title&gt;Phase 1&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>    &lt;div&gt;<br>        &lt;h1&gt;Modular Demo 1&lt;/h1&gt;<br>    &lt;/div&gt;<br>    &lt;div id=”messagebox”&gt;&lt;/div&gt;</pre></p>
+<p><pre class="lang:xhtml decode:true">&lt;html xmlns=”<a href="http://www.w3.org/1999/xhtml&quot;" target="_blank" rel="noopener">http://www.w3.org/1999/xhtml&quot;</a>&gt;<br>&lt;head&gt;<br>    &lt;title&gt;Phase 1&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>    &lt;div&gt;<br>        &lt;h1&gt;Modular Demo 1&lt;/h1&gt;<br>    &lt;/div&gt;<br>    &lt;div id=”messagebox”&gt;&lt;/div&gt;</pre></p>
 <pre><code>&amp;lt;script src=&quot;../Scripts/jquery-1.8.2.min.js&quot; type=&quot;text/javascript&quot;&amp;gt;&amp;lt;/script&amp;gt;
 
 &amp;lt;script type=&quot;text/javascript&quot;&amp;gt;
@@ -143,7 +143,7 @@
 </code></pre><p>//模块4，匿名函数，传 id, 调用 messenger 的showMessage() 方法 （直接执行）<br>        (function (messenger) {<br>            var id = 55;<br>            messenger.showMessage(id);<br>        })(messenger);<br>将这些代码放到原来的、没有重构前的页面中去，将实现同样的效果。但是我们将这些功能独立出来后，就可以很好的重复利用部分代码。</p>
 <p>下面假设我们将这 4 个模块放到 4 个独立的 js 文件中：</p>
 <p><ul><br>    <li>模块1：config.js</li><br>    <li>模块2：dataservice.js</li><br>    <li>模块3：messenger.js</li><br>    <li>模块4：main.js</li><br></ul><br>这样，在我们的 html 页面中，我们需要依次加载这 4 个模块：</p>
-<p><pre class="brush: xml;fontsize: 100; first-line: 1;">&lt;html xmlns=”<a href="http://www.w3.org/1999/xhtml&quot;&amp;gt" target="_blank" rel="noopener">http://www.w3.org/1999/xhtml&quot;&amp;gt</a>;<br>&lt;head&gt;<br>    &lt;title&gt;Phase 1&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>    &lt;div&gt;<br>        &lt;h1&gt;Modular Demo 1&lt;/h1&gt;<br>    &lt;/div&gt;<br>    &lt;div id=”messagebox”&gt;&lt;/div&gt;</pre></p>
+<p><pre class="brush: xml;fontsize: 100; first-line: 1;">&lt;html xmlns=”<a href="http://www.w3.org/1999/xhtml&quot;" target="_blank" rel="noopener">http://www.w3.org/1999/xhtml&quot;</a>&gt;<br>&lt;head&gt;<br>    &lt;title&gt;Phase 1&lt;/title&gt;<br>&lt;/head&gt;<br>&lt;body&gt;<br>    &lt;div&gt;<br>        &lt;h1&gt;Modular Demo 1&lt;/h1&gt;<br>    &lt;/div&gt;<br>    &lt;div id=”messagebox”&gt;&lt;/div&gt;</pre></p>
 <pre><code>&amp;lt;script src=&quot;../Scripts/jquery-1.8.2.min.js&quot; type=&quot;text/javascript&quot;&amp;gt;&amp;lt;/script&amp;gt;
 
 &amp;lt;script src=&quot;config.js&quot; type=&quot;text/javascript&quot;&amp;gt;&amp;lt;/script&amp;gt;
@@ -267,9 +267,9 @@
   <p class="site-info">
     Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
     Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
-    <br />
+    <br>
     
-    &copy; 2018 jasonslyvia
+    &copy; 2019 jasonslyvia
     
   </p>
 </footer>

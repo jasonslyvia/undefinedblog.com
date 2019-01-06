@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="zh-hans">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
   <title>OS X Apache 部署完全指南 | undefined | everything starts &amp; ends</title>
@@ -29,12 +29,12 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
 
-  <meta property="og:title" content="OS X Apache 部署完全指南"/>
+  <meta property="og:title" content="OS X Apache 部署完全指南">
 
-  <meta property="og:site_name" content="undefined"/>
+  <meta property="og:site_name" content="undefined">
 
   
-  <meta property="og:image" content="/favicon.ico"/>
+  <meta property="og:image" content="/favicon.ico">
   
 
   <link href="/favicon.ico" rel="icon">
@@ -105,7 +105,7 @@
 <p><pre class="lang:sh decode:true">#Virtual hosts</pre></p>
 <p>#Include /private/etc/apache2/extra/httpd-vhosts.conf<br>一段，将 Include 前面的 # 去掉，保存</p>
 <p>2、编辑虚拟主机配置文件，在末尾添加新的虚拟主机配置</p>
-<p><pre class="lang:sh decode:true">&lt;VirtualHost *:80&gt;<br>    ServerAdmin youremail@email.com<br>    ServerName your_server_name<br>    DocumentRoot “path_to_your_document_root”<br>    ErrorLog “/etc/apache2/error.log”<br>    &lt;Directory “path_to_your_document_root”&gt;<br>        Options All Indexes FollowSymLinks<br>        Satisfy Any<br>        AllowOverride All<br>        Order allow,deny<br>        Allow from all<br>        Require all granted<br>    &lt;/Directory&gt;<br>&lt;/VirtualHost&gt;</pre></p>
+<p><pre class="lang:sh decode:true">&lt;VirtualHost *:80&gt;<br>    ServerAdmin <a href="mailto:youremail@email.com" target="_blank" rel="noopener">youremail@email.com</a><br>    ServerName your_server_name<br>    DocumentRoot “path_to_your_document_root”<br>    ErrorLog “/etc/apache2/error.log”<br>    &lt;Directory “path_to_your_document_root”&gt;<br>        Options All Indexes FollowSymLinks<br>        Satisfy Any<br>        AllowOverride All<br>        Order allow,deny<br>        Allow from all<br>        Require all granted<br>    &lt;/Directory&gt;<br>&lt;/VirtualHost&gt;</pre></p>
 <p><ul><br>    <li>ServerAdmin：你的邮箱地址，可以随便填，不影响</li><br>    <li>ServerName：要与你在 hosts 中添加的名称一致，比如你希望在浏览器输入 mywebsite.xxx 就能访问这个虚拟主机，就需要先在 hosts 中增加一行 127.0.0.1   mywebsite.xxx，再将 ServerName 设置为 mywebsite.xxx</li><br>    <li>DocumentRoot 及 Directory 后引号中的内容：你的所有代码存放的目录</li><br></ul><br>编辑完成后保存（Require all granted 是 Apache 2.4.3 以后新增的特性）</p>
 <p>3、重启 apache，试试输入你绑定好的域名访问你的虚拟主机</p>
 <p></p><h2>常见问题</h2><br>0、检查你的配置文件，通过<p></p>
@@ -181,9 +181,9 @@
   <p class="site-info">
     Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
     Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
-    <br />
+    <br>
     
-    &copy; 2018 jasonslyvia
+    &copy; 2019 jasonslyvia
     
   </p>
 </footer>

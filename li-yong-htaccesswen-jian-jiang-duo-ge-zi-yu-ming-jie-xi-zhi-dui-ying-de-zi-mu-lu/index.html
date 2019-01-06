@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="zh-hans">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
   <title>利用.htaccess文件将多个子域名解析至对应的子目录 | undefined | everything starts &amp; ends</title>
@@ -30,12 +30,12 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
 
-  <meta property="og:title" content="利用.htaccess文件将多个子域名解析至对应的子目录"/>
+  <meta property="og:title" content="利用.htaccess文件将多个子域名解析至对应的子目录">
 
-  <meta property="og:site_name" content="undefined"/>
+  <meta property="og:site_name" content="undefined">
 
   
-  <meta property="og:image" content="/favicon.ico"/>
+  <meta property="og:image" content="/favicon.ico">
   
 
   <link href="/favicon.ico" rel="icon">
@@ -98,7 +98,7 @@
     <div class="entry">
       
         <p></p><p>对于不支持子域名解析但是支持 .htaccess 的主机来说，这个功能就非常有用了</p><p></p>
-<p></p><p>假设有主域名 ppios.com，子域名 yspx.ppios.com 和 ask.ppios.com，设置结果为访问 repo.ppios.com 时自动解析到 www.ppios.com/repo/ 文件夹中</p><p></p>
+<p></p><p>假设有主域名 ppios.com，子域名 yspx.ppios.com 和 ask.ppios.com，设置结果为访问 repo.ppios.com 时自动解析到 <a href="http://www.ppios.com/repo/" target="_blank" rel="noopener">www.ppios.com/repo/</a> 文件夹中</p><p></p>
 <p></p><p>下面是详细设置：<br> <strong>在根目录下的 .htaccess</strong></p><p></p>
 <p><blockquote></blockquote></p>
 <p></p><p>RewriteEngine On<br> RewriteCond %{HTTP_HOST} ^((www|<span style="color: #008000;">yspx</span>).)?<span style="color: #800000;">ppios</span>.com$<br> RewriteCond %{REQUEST_URI} !^/<span style="color: #008000;">yspx</span>/<br> RewriteCond %{REQUEST_FILENAME} !-f<br> RewriteCond %{REQUEST_FILENAME} !-d<br> RewriteRule ^(.*)$ /<span style="color: #008000;">yspx</span>/$1<br> RewriteCond %{HTTP_HOST} ^((www|<span style="color: #008000;">yspx</span>).)?<span style="color: #800000;">ppios</span>.com$<br> RewriteRule ^(/)?$ <span style="color: #008000;">yspx</span>/<span style="color: #0000ff;">index.html</span> [L]</p><p></p>
@@ -174,9 +174,9 @@ RewriteRule . /<span style="color: #008000;">repo</span>/ [L]</pre>
   <p class="site-info">
     Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
     Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
-    <br />
+    <br>
     
-    &copy; 2018 jasonslyvia
+    &copy; 2019 jasonslyvia
     
   </p>
 </footer>

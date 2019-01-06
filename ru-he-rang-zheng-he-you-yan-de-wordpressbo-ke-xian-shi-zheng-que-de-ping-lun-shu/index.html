@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <html lang="zh-hans">
-<head>
+<head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
   <title>如何让整合友言的Wordpress博客显示正确的评论数 | undefined | everything starts &amp; ends</title>
@@ -28,12 +28,12 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="theme-color" content="#ffffff">
 
-  <meta property="og:title" content="如何让整合友言的Wordpress博客显示正确的评论数"/>
+  <meta property="og:title" content="如何让整合友言的Wordpress博客显示正确的评论数">
 
-  <meta property="og:site_name" content="undefined"/>
+  <meta property="og:site_name" content="undefined">
 
   
-  <meta property="og:image" content="/favicon.ico"/>
+  <meta property="og:image" content="/favicon.ico">
   
 
   <link href="/favicon.ico" rel="icon">
@@ -95,7 +95,7 @@
   <div class="article-content">
     <div class="entry">
       
-        <p>友言（uyan.cc）是一个社会化评论聚合网站，使用友言提供的社交评论框代替Wordpress自带的评论框，可以让你的网站与SNS连接的更紧，也方便网友直接在SNS里对网站的内容进行评论。<br><br>但是由于友言使用了&lt;iframe&gt;结构，且评论机制不同于Wordpress原生评论，因此Wordpress主题自带的显示评论计数的函数就没用了。下面ppiOS就教大家如何解决这一问题。</p><br><h2>步骤一</h2><br><p>将以下代码保存到footer.php中&lt;/body&gt;标签之前<br><br>[cc lang=”javascript”]<br><br><!-- UY BEGIN --><br><br><script charset="gb2312" type="text/javascript" language="javascript">// &lt;![CDATA[<br>(function () {<br>        var uyan_amount = document.createElement(‘script’);<br>        uyan_amount.type = ‘text/javascript’;<br>        uyan_amount.src = ‘<a href="http://uyan.cc/js/countFrame.js">http://uyan.cc/js/countFrame.js</a>‘;<br>        (document.getElementsByTagName(‘HEAD’)[0] || document.getElementsByTagName(‘BODY’)[0]).appendChild(uyan_amount);<br>    }());<br>// ]]&gt;</script><br><br><!-- UY END -->[/cc]</p><br><h2>步骤二</h2><br><p>在需要显示评论计数的地方插入如下代码<br><br>[cc lang=”php”]<a href="<?php echo wp_get_shortlink(); ?>" uyan_identify="true">0条评论</a>[/cc]<br><br>友言会自动判断本篇文章的评论数并修复为正确的数量，完成！</p>
+        <p>友言（uyan.cc）是一个社会化评论聚合网站，使用友言提供的社交评论框代替Wordpress自带的评论框，可以让你的网站与SNS连接的更紧，也方便网友直接在SNS里对网站的内容进行评论。<br><br>但是由于友言使用了&lt;iframe&gt;结构，且评论机制不同于Wordpress原生评论，因此Wordpress主题自带的显示评论计数的函数就没用了。下面ppiOS就教大家如何解决这一问题。</p><br><h2>步骤一</h2><br><p>将以下代码保存到footer.php中&lt;/body&gt;标签之前<br><br>[cc lang=”javascript”]<br><br><!-- UY BEGIN --><br><br><script charset="gb2312" type="text/javascript" language="javascript">// &lt;![CDATA[<br>(function () {<br>        var uyan_amount = document.createElement(‘script’);<br>        uyan_amount.type = ‘text/javascript’;<br>        uyan_amount.src = ‘<a href="http://uyan.cc/js/countFrame.js&#39;">http://uyan.cc/js/countFrame.js&#39;</a>;<br>        (document.getElementsByTagName(‘HEAD’)[0] || document.getElementsByTagName(‘BODY’)[0]).appendChild(uyan_amount);<br>    }());<br>// ]]&gt;</script><br><br><!-- UY END -->[/cc]</p><br><h2>步骤二</h2><br><p>在需要显示评论计数的地方插入如下代码<br><br>[cc lang=”php”]<a href="<?php echo wp_get_shortlink(); ?>" uyan_identify="true">0条评论</a>[/cc]<br><br>友言会自动判断本篇文章的评论数并修复为正确的数量，完成！</p>
 
       
     </div>
@@ -150,9 +150,9 @@
   <p class="site-info">
     Powered by <a href="https://hexo.io/" target="_blank" rel="nofollow">Hexo</a> and
     Theme adapted from <a href="https://github.com/CodeDaraW/Hacker" target="_blank" rel="nofollow">Hacker</a>
-    <br />
+    <br>
     
-    &copy; 2018 jasonslyvia
+    &copy; 2019 jasonslyvia
     
   </p>
 </footer>
